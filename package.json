@@ -27,12 +27,14 @@
   },
   "private": true,
   "dependencies": {
+    "aws-lambda": "^1.0.6",
     "document-register-element": "1.13.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-is": "16.13.1",
-    "styled-components": "5.1.1",
-    "react-router-dom": "5.2.0"
+    "react-router-dom": "5.2.0",
+    "source-map-support": "^0.5.19",
+    "styled-components": "5.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.9.6",
@@ -47,7 +49,10 @@
     "@nrwl/storybook": "^10.2.1",
     "@nrwl/web": "10.2.1",
     "@nrwl/workspace": "10.2.1",
+    "@storybook/addon-knobs": "5.3.9",
+    "@storybook/react": "5.3.9",
     "@testing-library/react": "10.4.1",
+    "@types/babel__core": "^7.1.10",
     "@types/jest": "26.0.8",
     "@types/node": "~8.9.4",
     "@types/react": "16.9.38",
@@ -55,9 +60,11 @@
     "@types/react-is": "16.7.1",
     "@types/react-router-dom": "5.1.5",
     "@types/styled-components": "5.1.0",
+    "@types/webpack": "4.41.21",
     "@typescript-eslint/eslint-plugin": "2.19.2",
     "@typescript-eslint/parser": "2.19.2",
     "babel-jest": "26.2.2",
+    "babel-loader": "8.1.0",
     "babel-plugin-styled-components": "1.10.7",
     "cypress": "^4.1.0",
     "dotenv": "6.2.0",
@@ -66,13 +73,12 @@
     "eslint-plugin-cypress": "^2.10.3",
     "jest": "26.2.2",
     "prettier": "2.0.4",
+    "serverless": "^2.4.0",
+    "serverless-webpack": "^5.3.5",
     "ts-jest": "26.1.4",
     "ts-node": "~7.0.0",
+    "tsconfig-paths-webpack-plugin": "^3.3.0",
     "tslint": "~6.0.0",
-    "typescript": "~3.9.3",
-    "@storybook/addon-knobs": "5.3.9",
-    "@types/webpack": "4.41.21",
-    "@storybook/react": "5.3.9",
-    "babel-loader": "8.1.0"
+    "typescript": "~3.9.3"
   }
 }
