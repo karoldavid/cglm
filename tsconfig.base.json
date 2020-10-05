@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cglm/ui": ["libs/ui/src/index.ts"]
+      "@cglm/ui": ["libs/ui/src/index.ts"],
+      "@cglm/common-util": ["libs/common-util/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
