@@ -2,8 +2,8 @@ import React from 'react'
 import Auth from './auth/Auth'
 import { Router, Route } from 'react-router-dom'
 import { Callback } from '@cglm/ui'
-import createHistory from 'history/createBrowserHistory'
-import App from './App';
+import { createBrowserHistory as createHistory } from 'history'
+import App from './app';
 const history = createHistory()
 
 const auth = new Auth(history)

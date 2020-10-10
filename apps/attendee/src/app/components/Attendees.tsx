@@ -8,6 +8,6 @@ interface AttendeesState {
 
 export class Attendees extends React.PureComponent<AttendeesProps, AttendeesState> {
   render() {
-    return <h1>Attendees</h1>
+    return <h1>Welcome to attendee!</h1>
   }
 }
