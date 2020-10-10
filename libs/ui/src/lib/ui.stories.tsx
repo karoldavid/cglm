@@ -1,4 +1,5 @@
 import React from 'react';
+import 'semantic-ui-css/semantic.min.css'
 import { Ui, UiProps } from './ui';
 
 export default {
