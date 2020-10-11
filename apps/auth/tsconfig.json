@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "files": [],
-  "include": [],
+  "include": ["src/**/*", "package.json"],
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -11,6 +11,9 @@
     }
   ],
   "compilerOptions": {
-    "composite": true
+    "composite": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }

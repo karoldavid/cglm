@@ -166,7 +166,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-auth-app/dev/1601924595811-2020-10-05T19:03:15.811Z/serverless-auth-app.zip"
+                "S3Key": "serverless/serverless-auth-app/dev/1602407775189-2020-10-11T09:16:15.189Z/serverless-auth-app.zip"
               },
               "FunctionName": "serverless-auth-app-dev-Auth",
               "Handler": "apps/auth/src/lambda/auth/auth0Authorizer.handler",
@@ -189,14 +189,14 @@
               "AuthLogGroup"
             ]
           },
-          "AuthLambdaVersionqofkoKlagCaleyx2rzz32upBCen1Mca1PMBhPKRYN8s": {
+          "AuthLambdaVersionXdfRNCo3em4PopQvSnfRSmWyc5BshDIRX5DkRYoPZQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AuthLambdaFunction"
               },
-              "CodeSha256": "Tr69zO6PLPondeNUNhTaOfTvVLNwRUd7HPHPDICNrX4="
+              "CodeSha256": "r4ejek7e7KcwSxZK0qR0NOtpDtAglNkw7cPxVFkj7XQ="
             }
           }
         },
@@ -209,7 +209,7 @@
           "AuthLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AuthLambdaVersionqofkoKlagCaleyx2rzz32upBCen1Mca1PMBhPKRYN8s"
+              "Ref": "AuthLambdaVersionXdfRNCo3em4PopQvSnfRSmWyc5BshDIRX5DkRYoPZQ"
             }
           }
         }
@@ -308,7 +308,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "AuthLambdaVersionqofkoKlagCaleyx2rzz32upBCen1Mca1PMBhPKRYN8s"
+        "versionLogicalId": "AuthLambdaVersionXdfRNCo3em4PopQvSnfRSmWyc5BshDIRX5DkRYoPZQ"
       }
     },
     "serviceFilename": "serverless.yml",
@@ -317,7 +317,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/serverless-auth-app/dev/1601924595811-2020-10-05T19:03:15.811Z",
+    "artifactDirectoryName": "serverless/serverless-auth-app/dev/1602407775189-2020-10-11T09:16:15.189Z",
     "artifact": ""
   }
 }
