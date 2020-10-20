@@ -1,61 +1,6 @@
 {
   "version": 1,
   "projects": {
-    "auth": {
-      "root": "apps/auth",
-      "sourceRoot": "apps/auth/src",
-      "projectType": "application",
-      "prefix": "auth",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "outputPath": "dist/apps/auth",
-            "main": "apps/auth/src/main.ts",
-            "tsConfig": "apps/auth/tsconfig.app.json",
-            "assets": ["apps/auth/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/auth/src/environments/environment.ts",
-                  "with": "apps/auth/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "auth:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:lint",
-          "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "apps/auth/tsconfig.app.json",
-              "apps/auth/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/auth/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/auth/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "attendance": {
       "root": "apps/attendance",
       "sourceRoot": "apps/attendance/src",
@@ -332,7 +277,7 @@
   "cli": {
     "defaultCollection": "@nrwl/node"
   },
-  "defaultProject": "auth",
+  "defaultProject": "attendance",
   "schematics": {
     "@nrwl/react": {
       "application": {

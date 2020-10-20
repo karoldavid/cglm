@@ -28,9 +28,6 @@
     }
   },
   "projects": {
-    "auth": {
-      "tags": []
-    },
     "attendance": {
       "tags": []
     },
