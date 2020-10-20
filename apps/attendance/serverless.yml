@@ -1,0 +1,39 @@
+Fauthorg: zyskkd
+app: attendance-app
+
+service:
+  name: serverless-attendance-app
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+
+custom:
+  serverless-offline:
+    httpPort: 3003
+    allowCache: true
+    useChildProcesses: true
+  stage: ${opt:stage, self:provider.stage}
+  apiEndpoint:
+    dev: https://dev-wtkb-285.eu.auth0.com/.well-known/jwks.json
+
+functions:
+  Auth:
+    handler: apps/attendance/src/app/lambda/auth/auth0Authorizer.handler
+    environment:
+      AUTH_0_JWKS_URL: ${self:custom.apiEndpoint.${self:custom.stage}}
+  GetEvents:
+    handler: apps/attendance/src/app/lambda/http/getEvents.handler
+    events:
+      - http:
+          method: get
+          path: events
+          cors: true
+          authorizer: Auth
