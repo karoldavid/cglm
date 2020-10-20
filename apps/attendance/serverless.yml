@@ -30,7 +30,7 @@ functions:
     environment:
       AUTH_0_JWKS_URL: ${self:custom.apiEndpoint.${self:custom.stage}}
   # GetEvents:
-  #   handler: apps/attendance/src/app/lambda/http/getEvents.handler
+  #   handler: src/app/lambda/http/getEvents.handler
   #   events:
   #     - http:
   #         method: get
