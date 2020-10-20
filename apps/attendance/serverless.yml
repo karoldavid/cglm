@@ -1,4 +1,4 @@
-Fauthorg: zyskkd
+org: zyskkd
 app: attendance-app
 
 service:
@@ -29,11 +29,11 @@ functions:
     handler: apps/attendance/src/app/lambda/auth/auth0Authorizer.handler
     environment:
       AUTH_0_JWKS_URL: ${self:custom.apiEndpoint.${self:custom.stage}}
-  GetEvents:
-    handler: apps/attendance/src/app/lambda/http/getEvents.handler
-    events:
-      - http:
-          method: get
-          path: events
-          cors: true
-          authorizer: Auth
+  # GetEvents:
+  #   handler: apps/attendance/src/app/lambda/http/getEvents.handler
+  #   events:
+  #     - http:
+  #         method: get
+  #         path: events
+  #         cors: true
+  #         authorizer: Auth
