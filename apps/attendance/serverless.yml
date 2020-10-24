@@ -6,7 +6,9 @@ service:
 
 plugins:
   - serverless-webpack
+  #  - serverless-iam-roles-per-function
   - serverless-offline
+  - serverless-dynamodb-local
 
 provider:
   name: aws
@@ -14,6 +16,26 @@ provider:
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
+
+  environment:
+    EVENTS_TABLE: Events-${self:provider.stage}
+    INDEX_NAME: UserIdIndex
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:GetItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}/index/${self:provider.environment.INDEX_NAME}
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
 
 custom:
   serverless-offline:
@@ -23,17 +45,79 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   apiEndpoint:
     dev: https://dev-wtkb-285.eu.auth0.com/.well-known/jwks.json
+  dynamodb:
+    start:
+      port: 8002
+      inMemory: true
+      migrate: true
+    stages:
+      - ${opt:stage, self:provider.stage}
 
 functions:
   Auth:
     handler: apps/attendance/src/app/lambda/auth/auth0Authorizer.handler
     environment:
       AUTH_0_JWKS_URL: ${self:custom.apiEndpoint.${self:custom.stage}}
+
   GetEvents:
     handler: apps/attendance/src/app/lambda/http/getEvents.handler
+    # iamRoleStatements:
+    #   - Effect: Allow
+    #     Action:
+    #       - dynamodb:Query
+    #       - dynamodb:GetItem
+    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+    #   - Effect: Allow
+    #     Action:
+    #       - dynamodb:Query
+    #       - dynamodb:GetItem
+    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}/index/${self:provider.environment.INDEX_NAME}
     events:
       - http:
           method: get
           path: events
           cors: true
           authorizer: Auth
+
+  CreateEvent:
+    handler: apps/attendance/src/app/lambda/http/createEvent.handler
+    # iamRoleStatements:
+    #   - Effect: Allow
+    #     Action:
+    #       - dynamodb:PutItem
+    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+    events:
+      - http:
+          method: post
+          path: events
+          cors: true
+          authorizer: Auth
+
+resources:
+  Resources:
+    EventsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: eventId
+            AttributeType: S
+          - AttributeName: createdAt
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          - AttributeName: eventId
+            KeyType: RANGE
+        LocalSecondaryIndexes:
+          - IndexName: ${self:provider.environment.INDEX_NAME}
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: createdAt
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.EVENTS_TABLE}
