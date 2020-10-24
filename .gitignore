@@ -42,3 +42,8 @@ Thumbs.db
 # Files containing environment variables 
 .env
 .local.env
+
+# other
+.webpack
+.dynamodb
+.serverless
