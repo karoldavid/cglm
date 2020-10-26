@@ -1,36 +1,36 @@
-import React, { Component } from 'react'
-import { Link, Route, Router, Switch } from 'react-router-dom'
-import { Grid, Menu, Segment } from 'semantic-ui-react'
+import React, { Component } from 'react';
+import { Link, Route, Router, Switch } from 'react-router-dom';
+import { Grid, Menu, Segment } from 'semantic-ui-react';
 
-import Auth from './auth/Auth'
-import { LogIn } from './components/Login'
-import { NotFound } from './components/NotFound'
-import { Attendees } from './components/Attendees'
-import { EditAttendee } from './components/EditAttendee'
+import Auth from './auth/Auth';
+import { LogIn } from './components/Login';
+import { NotFound } from './components/NotFound';
+import { Events } from './components/Events';
+import { EditAttendee } from './components/EditAttendee';
 
 export interface AppProps {}
 
 export interface AppProps {
-  auth: Auth
-  history: any
+  auth: Auth;
+  history: any;
 }
 
 export interface AppState {}
 
 export default class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
-    super(props)
+    super(props);
 
-    this.handleLogin = this.handleLogin.bind(this)
-    this.handleLogout = this.handleLogout.bind(this)
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   handleLogin() {
-    this.props.auth.login()
+    this.props.auth.login();
   }
 
   handleLogout() {
-    this.props.auth.logout()
+    this.props.auth.logout();
   }
 
   render() {
@@ -50,7 +50,7 @@ export default class App extends Component<AppProps, AppState> {
           </Grid>
         </Segment>
       </div>
-    )
+    );
   }
 
   generateMenu() {
@@ -62,7 +62,7 @@ export default class App extends Component<AppProps, AppState> {
 
         <Menu.Menu position="right">{this.logInLogOutButton()}</Menu.Menu>
       </Menu>
-    )
+    );
   }
 
   logInLogOutButton() {
@@ -71,19 +71,19 @@ export default class App extends Component<AppProps, AppState> {
         <Menu.Item name="logout" onClick={this.handleLogout}>
           Log Out
         </Menu.Item>
-      )
+      );
     } else {
       return (
         <Menu.Item name="login" onClick={this.handleLogin}>
           Log In
         </Menu.Item>
-      )
+      );
     }
   }
 
   generateCurrentPage() {
     if (!this.props.auth.isAuthenticated()) {
-      return <LogIn auth={this.props.auth} />
+      return <LogIn auth={this.props.auth} />;
     }
 
     return (
@@ -91,21 +91,21 @@ export default class App extends Component<AppProps, AppState> {
         <Route
           path="/"
           exact
-          render={props => {
-            return <Attendees {...props} auth={this.props.auth} />
+          render={(props) => {
+            return <Events {...props} auth={this.props.auth} />;
           }}
         />
 
         <Route
           path="/:attendeeId/edit"
           exact
-          render={props => {
-            return <EditAttendee {...props} auth={this.props.auth} />
+          render={(props) => {
+            return <EditAttendee {...props} auth={this.props.auth} />;
           }}
         />
 
         <Route component={NotFound} />
       </Switch>
-    )
+    );
   }
 }
