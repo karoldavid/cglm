@@ -5,6 +5,7 @@ import { Grid, Menu, Segment } from 'semantic-ui-react';
 import Auth from './auth/Auth';
 import { LogIn } from './components/Login';
 import { NotFound } from './components/NotFound';
+import { Home } from './components/Home';
 import { Events } from './components/Events';
 import { EditAttendee } from './components/EditAttendee';
 
@@ -59,7 +60,9 @@ export default class App extends Component<AppProps, AppState> {
         <Menu.Item name="home">
           <Link to="/">Home</Link>
         </Menu.Item>
-
+        <Menu.Item name="events">
+          <Link to="/events">Events</Link>
+        </Menu.Item>
         <Menu.Menu position="right">{this.logInLogOutButton()}</Menu.Menu>
       </Menu>
     );
@@ -90,6 +93,14 @@ export default class App extends Component<AppProps, AppState> {
       <Switch>
         <Route
           path="/"
+          exact
+          render={(props) => {
+            return <Home {...props} />;
+          }}
+        />
+
+        <Route
+          path="/events"
           exact
           render={(props) => {
             return <Events {...props} auth={this.props.auth} />;
