@@ -1,5 +1,5 @@
 export interface Event {
-  // userId: string;
+  userId: string;
   eventId: string;
   createdAt: string;
   name: string;

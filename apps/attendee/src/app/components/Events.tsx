@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Header } from 'semantic-ui-react';
+import { useHistory } from 'react-router-dom';
 
 import { getEvents } from '../api/events';
 import Auth from '../auth/Auth';
@@ -16,6 +17,8 @@ interface EventsState {
 }
 
 export const Events: React.FunctionComponent<EventsProps> = ({ auth }) => {
+  const history = useHistory();
+
   const [eventsState, setEventsState] = useState<EventsState>({
     events: [],
     loading: false,
@@ -27,7 +30,7 @@ export const Events: React.FunctionComponent<EventsProps> = ({ auth }) => {
       const events = await getEvents(token);
       setEventsState({ events, loading: false });
     } catch (e) {
-      alert(`Failed to fetch todos: ${e.message}`);
+      alert(`Failed to fetch events: ${e.message}`);
       setEventsState({ events: [], loading: false });
     }
   };
@@ -39,8 +42,11 @@ export const Events: React.FunctionComponent<EventsProps> = ({ auth }) => {
   return (
     <>
       <Container style={{ padding: '5em 0em' }}>
-        <Header as="h1">Welcome to attendee!</Header>
-        <EventsTable events={eventsState.events} />
+        <Header size="medium">Events Overview</Header>
+        <EventsTable
+          events={eventsState.events}
+          loading={eventsState.loading}
+        />
       </Container>
     </>
   );

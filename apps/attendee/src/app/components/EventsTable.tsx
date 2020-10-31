@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
-import { Table } from 'semantic-ui-react';
+import React from 'react';
+import { Table, Dimmer, Loader } from 'semantic-ui-react';
 import { Event } from '../types/Event';
 
 interface EventsTableProps {
   events: Event[];
+  loading: boolean;
 }
 
 export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
   events,
+  loading,
 }) => {
   const renderTableHeader = () => {
     return (
@@ -33,16 +35,29 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
     return (
       <>
         {events.map((event) => (
-          <Table.Row>{renderTableCells(event)}</Table.Row>
+          <Table.Row key={event.eventId}>{renderTableCells(event)}</Table.Row>
         ))}
       </>
     );
   };
 
+  const renderTableContent = (events: Event[]) => {
+    return (
+      <>
+        {renderTableHeader()}
+        <Table.Body>{renderTableRows(events)}</Table.Body>
+      </>
+    );
+  };
+
   return (
-    <Table attached>
-      {renderTableHeader()}
-      <Table.Body>{renderTableRows(events)}</Table.Body>
-    </Table>
+    <>
+      <Table attached>{renderTableContent(events)}</Table>
+      {loading && (
+        <Dimmer active inverted>
+          <Loader inverted>Loading</Loader>
+        </Dimmer>
+      )}
+    </>
   );
 };

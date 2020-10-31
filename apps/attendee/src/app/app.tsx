@@ -1,15 +1,10 @@
-import React, { Component } from 'react';
-import { Link, Route, Router, Switch } from 'react-router-dom';
-import { Grid, Menu, Segment } from 'semantic-ui-react';
+import React from 'react';
+import { Link, Router, useLocation } from 'react-router-dom';
+import { Grid, Header, Menu, Segment, Container } from 'semantic-ui-react';
 
 import Auth from './auth/Auth';
-import { LogIn } from './components/Login';
-import { NotFound } from './components/NotFound';
-import { Home } from './components/Home';
-import { Events } from './components/Events';
-import { EditAttendee } from './components/EditAttendee';
-
-export interface AppProps {}
+import { Content } from './Content';
+import { userInfo } from 'os';
 
 export interface AppProps {
   auth: Auth;
@@ -18,105 +13,73 @@ export interface AppProps {
 
 export interface AppState {}
 
-export default class App extends Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props);
+export const App: React.FunctionComponent<AppProps> = ({ auth, history }) => {
+  const { pathname } = useLocation();
 
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-  }
+  const handleLogin = () => {
+    auth.login();
+  };
 
-  handleLogin() {
-    this.props.auth.login();
-  }
+  const handleLogout = () => {
+    auth.logout();
+  };
 
-  handleLogout() {
-    this.props.auth.logout();
-  }
-
-  render() {
-    return (
-      <div>
-        <Segment style={{ padding: '8em 0em' }} vertical>
-          <Grid container stackable verticalAlign="middle">
-            <Grid.Row>
-              <Grid.Column width={16}>
-                <Router history={this.props.history}>
-                  {this.generateMenu()}
-
-                  {this.generateCurrentPage()}
-                </Router>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
-      </div>
-    );
-  }
-
-  generateMenu() {
-    return (
-      <Menu>
-        <Menu.Item name="home">
-          <Link to="/">Home</Link>
-        </Menu.Item>
-        <Menu.Item name="events">
-          <Link to="/events">Events</Link>
-        </Menu.Item>
-        <Menu.Menu position="right">{this.logInLogOutButton()}</Menu.Menu>
-      </Menu>
-    );
-  }
-
-  logInLogOutButton() {
-    if (this.props.auth.isAuthenticated()) {
+  const logInLogOutButton = () => {
+    if (auth.isAuthenticated()) {
       return (
-        <Menu.Item name="logout" onClick={this.handleLogout}>
+        <Menu.Item name="logout" onClick={handleLogout}>
           Log Out
         </Menu.Item>
       );
     } else {
       return (
-        <Menu.Item name="login" onClick={this.handleLogin}>
+        <Menu.Item name="login" onClick={handleLogin}>
           Log In
         </Menu.Item>
       );
     }
-  }
+  };
 
-  generateCurrentPage() {
-    if (!this.props.auth.isAuthenticated()) {
-      return <LogIn auth={this.props.auth} />;
-    }
-
+  const generateMenu = () => {
     return (
-      <Switch>
-        <Route
-          path="/"
-          exact
-          render={(props) => {
-            return <Home {...props} />;
-          }}
-        />
-
-        <Route
-          path="/events"
-          exact
-          render={(props) => {
-            return <Events {...props} auth={this.props.auth} />;
-          }}
-        />
-
-        <Route
-          path="/:attendeeId/edit"
-          exact
-          render={(props) => {
-            return <EditAttendee {...props} auth={this.props.auth} />;
-          }}
-        />
-
-        <Route component={NotFound} />
-      </Switch>
+      <Menu>
+        <Menu.Item name="home" active={pathname === '/'}>
+          <Link to="/">Home</Link>
+        </Menu.Item>
+        <Menu.Item name="events" active={pathname === '/events'}>
+          <Link to="/events">Events</Link>
+        </Menu.Item>
+        <Menu.Item name="newEvent" active={pathname === '/events/new'}>
+          <Link to="/events/new">New Event</Link>
+        </Menu.Item>
+        <Menu.Menu position="right">{logInLogOutButton()}</Menu.Menu>
+      </Menu>
     );
-  }
-}
+  };
+
+  return (
+    <Container style={{ padding: '2em 0em' }}>
+      <Segment style={{ padding: '1em 0em' }} vertical>
+        <Grid container stackable verticalAlign="middle">
+          <Grid.Row>
+            <Grid.Column width={16}>
+              <Header as="h1">Attendee</Header>
+              <Header.Subheader>
+                Your Contactless Guest List Manager
+              </Header.Subheader>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={16}>
+              <Router history={history}>
+                {generateMenu()}
+
+                <Content auth={auth} />
+              </Router>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Segment>
+    </Container>
+  );
+};

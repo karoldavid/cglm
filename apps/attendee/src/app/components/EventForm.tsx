@@ -1,0 +1,80 @@
+import React, { useState } from 'react';
+import { Button, Form, Dimmer, Loader, Header } from 'semantic-ui-react';
+import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
+
+import { createEvent } from '../api/events';
+import { CreateEventRequest } from '../types/CreateEventRequest';
+import Auth from '../auth/Auth';
+
+interface EventFormProps {
+  auth: Auth;
+}
+
+type EventItem = {
+  name: string;
+  eventDate: string;
+};
+
+interface EventState {
+  loading: boolean;
+}
+
+export const EventForm: React.FunctionComponent<EventFormProps> = ({
+  auth,
+}) => {
+  const history = useHistory();
+  const [eventState, setEventState] = useState<EventState>({
+    loading: false,
+  });
+  const { register, handleSubmit } = useForm<EventItem>();
+
+  const onSubmit = async (data: CreateEventRequest) => {
+    const token = auth.getIdToken();
+    try {
+      setEventState({ loading: true });
+      await createEvent(token, data);
+      setEventState({ loading: false });
+
+      history.push('/events');
+    } catch (e) {
+      setEventState({ loading: false });
+
+      alert(`Failed to create event: ${e.message}`);
+      history.push('/events');
+    }
+  };
+
+  return (
+    <>
+      <Header size="medium">Create a new event</Header>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form.Field>
+          <input
+            placeholder="Event Name"
+            type="text"
+            id="name"
+            name="name"
+            ref={register({ required: true })}
+          />
+        </Form.Field>
+        <Form.Field>
+          <input
+            type="date"
+            id="eventDate"
+            name="eventDate"
+            ref={register({ required: true })}
+          />
+        </Form.Field>
+        <Button size="medium" color="blue" type="submit">
+          Save
+        </Button>
+      </Form>
+      {eventState.loading && (
+        <Dimmer active inverted>
+          <Loader inverted>Loading</Loader>
+        </Dimmer>
+      )}
+    </>
+  );
+};

@@ -1,10 +1,8 @@
 import { apiEndpoint } from '../../config';
-import { Event } from '../types/Event';
+import { CreateEventRequest } from '../types/CreateEventRequest';
 import Axios from 'axios';
 
 export async function getEvents(idToken: string): Promise<Event[]> {
-  console.log('Fetching Events');
-
   const response = await Axios.get(`${apiEndpoint}/events`, {
     headers: {
       'Content-Type': 'application/json',
@@ -12,4 +10,21 @@ export async function getEvents(idToken: string): Promise<Event[]> {
     },
   });
   return response.data.items;
+}
+
+export async function createEvent(
+  idToken: string,
+  newEvent: CreateEventRequest
+): Promise<Event> {
+  const response = await Axios.post(
+    `${apiEndpoint}/events`,
+    JSON.stringify(newEvent),
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`
+      }
+    }
+  )
+  return response.data.item
 }
