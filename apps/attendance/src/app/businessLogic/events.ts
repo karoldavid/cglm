@@ -36,3 +36,13 @@ export async function createEvent(
     eventDate: createEventRequest.eventDate,
   });
 }
+
+export async function eventExists(
+  event: APIGatewayProxyEvent
+): Promise<boolean> {
+  const userId = getUserId(event);
+  const eventId = event.pathParameters.eventId;
+  logger.info('Checking if event exists.', eventId, userId);
+
+  return eventAccess.eventExists(eventId, userId);
+}

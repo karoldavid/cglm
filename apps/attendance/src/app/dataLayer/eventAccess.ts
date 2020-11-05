@@ -1,7 +1,7 @@
-import * as AWS from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { createLogger } from '../utils/logger';
 import { EventItem } from '../models/EventItem';
+import { createDynamoDBClient } from './dynamoDBClient';
 
 const logger = createLogger('eventAccess');
 
@@ -42,16 +42,20 @@ export class EventAccess {
 
     return event;
   }
-}
 
-function createDynamoDBClient() {
-  if (process.env.IS_OFFLINE) {
-    logger.info('Creating a local DynamoDB instance');
-    return new AWS.DynamoDB.DocumentClient({
-      region: 'localhost',
-      endpoint: 'http://localhost:8002',
-    });
+  async eventExists(eventId: string, userId: string): Promise<boolean> {
+    logger.info('Checking if event exists', eventId);
+    const result = await this.docClient
+      .get({
+        TableName: this.eventsTable,
+        Key: {
+          userId: userId,
+          eventId: eventId,
+        },
+      })
+      .promise();
+
+    logger.info('Get event: ', result);
+    return !!result.Item;
   }
-
-  return new AWS.DynamoDB.DocumentClient();
 }
