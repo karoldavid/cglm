@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Form, Dimmer, Loader, Header } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+import { Button, Form, Segment, Header } from 'semantic-ui-react';
 
 import { createAttendee } from '../api/attendees';
 import { CreateAttendeeRequest } from '../types/CreateAttendeeRequest';
 import Auth from '../auth/Auth';
-
-const eventId = 'b3726998-84cc-4ee0-9dae-0a66afd8bf79';
 
 interface AttendeeFormProps {
   auth: Auth;
@@ -26,6 +24,9 @@ export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
   auth,
 }) => {
   const history = useHistory();
+
+  const { id } = useParams();
+
   const [attendeeState, setAttendeeState] = useState<AttendeeState>({
     loading: false,
   });
@@ -35,21 +36,21 @@ export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
     const token = auth.getIdToken();
     try {
       setAttendeeState({ loading: true });
-      await createAttendee(token, eventId, data);
+      await createAttendee(token, id, data);
       setAttendeeState({ loading: false });
 
-      history.push(`/events/${eventId}/attendees`);
+      history.push(`/events/${id}`);
     } catch (e) {
       setAttendeeState({ loading: false });
 
       alert(`Failed to create attendee: ${e.message}`);
-      history.push(`/events/${eventId}/attendees`);
+      history.push(`/events/${id}`);
     }
   };
 
   return (
-    <>
-      <Header size="medium">Create a new event</Header>
+    <Segment loading={attendeeState.loading}>
+      <Header size="medium">Add an attendee to the event</Header>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field>
           <input
@@ -72,11 +73,6 @@ export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
           Save
         </Button>
       </Form>
-      {attendeeState.loading && (
-        <Dimmer active inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
-      )}
-    </>
+    </Segment>
   );
 };

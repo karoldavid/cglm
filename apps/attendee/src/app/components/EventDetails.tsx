@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import { Header, Card, Loader } from 'semantic-ui-react';
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
+import { Header, Card, Loader, Segment, Button } from 'semantic-ui-react';
 
 import { getEvent } from '../api/events';
 import Auth from '../auth/Auth';
 import { EventItem } from '../models/EventItem';
-import { EventsTable } from './EventsTable';
 
 interface EventDetailsProps {
   auth: Auth;
@@ -20,12 +19,17 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
   auth,
 }) => {
   const history = useHistory();
+  const match = useRouteMatch();
   const { id } = useParams();
 
   const [eventState, setEventState] = useState<EventState>({
     event: null,
     loading: false,
   });
+
+  const navigateToNewAttendee = () => {
+    history.push(`${match.url}/attendees/new`);
+  };
 
   const getEventRequest = async (token: string, eventId: string) => {
     try {
@@ -37,13 +41,14 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
       setEventState({ event: null, loading: false });
     }
   };
+
   useEffect(() => {
     const token = auth.getIdToken();
     getEventRequest(token, id);
   }, []);
 
   return (
-    <>
+    <Segment>
       <Header size="medium">Event Details</Header>
       <Card
         header={
@@ -64,6 +69,14 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
           )
         }
       />
-    </>
+      <Button
+        size="medium"
+        color="blue"
+        type="button"
+        onClick={navigateToNewAttendee}
+      >
+        Add Attendee
+      </Button>
+    </Segment>
   );
 };

@@ -4,7 +4,6 @@ import { Grid, Header, Menu, Segment, Container } from 'semantic-ui-react';
 
 import Auth from './auth/Auth';
 import { Content } from './Content';
-import { userInfo } from 'os';
 
 export interface AppProps {
   auth: Auth;
@@ -65,7 +64,7 @@ export const App: React.FunctionComponent<AppProps> = ({ auth, history }) => {
             <Grid.Column width={16}>
               <Header as="h1">Attendee</Header>
               <Header.Subheader>
-                Your Contactless Guest List Manager
+                Contactless Guest List Manager
               </Header.Subheader>
             </Grid.Column>
           </Grid.Row>

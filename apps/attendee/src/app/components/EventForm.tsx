@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Form, Dimmer, Loader, Header } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Header,
+  Segment,
+} from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -46,7 +51,7 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
   };
 
   return (
-    <>
+    <Segment loading={eventState.loading}>
       <Header size="medium">Create a new event</Header>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field>
@@ -70,11 +75,6 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
           Save
         </Button>
       </Form>
-      {eventState.loading && (
-        <Dimmer active inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
-      )}
-    </>
+    </Segment>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Header } from 'semantic-ui-react';
+import { Header, Segment } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 
 import { getEvents } from '../api/events';
@@ -40,9 +40,9 @@ export const Events: React.FunctionComponent<EventsProps> = ({ auth }) => {
   }, []);
 
   return (
-    <>
+    <Segment loading={eventsState.loading}>
       <Header size="medium">Events Overview</Header>
-      <EventsTable events={eventsState.events} loading={eventsState.loading} />
-    </>
+      <EventsTable events={eventsState.events} />
+    </Segment>
   );
 };

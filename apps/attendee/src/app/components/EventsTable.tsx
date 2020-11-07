@@ -1,16 +1,14 @@
 import React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { Button, Table, Loader } from 'semantic-ui-react';
+import { Button, Table, Segment } from 'semantic-ui-react';
 import { EventItem } from '../models/EventItem';
 
 interface EventsTableProps {
   events: EventItem[];
-  loading: boolean;
 }
 
 export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
   events,
-  loading,
 }) => {
   const history = useHistory();
   const match = useRouteMatch();
@@ -63,32 +61,10 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
     return (
       <>
         {renderTableHeader()}
-        <Table.Body>
-          {loading ? (
-            <Table.Row>
-              <Table.Cell>-</Table.Cell>
-              <Table.Cell>-</Table.Cell>
-              <Table.Cell>-</Table.Cell>
-              <Table.Cell textAlign="right">
-                <Loader active inline />
-              </Table.Cell>
-            </Table.Row>
-          ) : (
-            renderTableRows(events)
-          )}
-        </Table.Body>
+        <Table.Body>{renderTableRows(events)}</Table.Body>
       </>
     );
   };
 
-  return (
-    <>
-      <Table attached>{renderTableContent(events)}</Table>
-      {/* {loading && (
-        <Dimmer active inverted>
-          <Loader inverted>Loading</Loader>
-        </Dimmer>
-      )} */}
-    </>
-  );
+  return <Table attached>{renderTableContent(events)}</Table>;
 };
