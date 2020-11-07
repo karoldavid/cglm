@@ -1,5 +1,6 @@
 import { apiEndpoint } from '../../config';
 import { CreateEventRequest } from '../types/CreateEventRequest';
+import { Event } from '../models/Event';
 import Axios from 'axios';
 
 export async function getEvents(idToken: string): Promise<Event[]> {
@@ -22,9 +23,9 @@ export async function createEvent(
     {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`
-      }
+        Authorization: `Bearer ${idToken}`,
+      },
     }
-  )
-  return response.data.item
+  );
+  return response.data.item;
 }

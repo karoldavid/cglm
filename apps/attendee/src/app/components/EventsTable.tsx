@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Dimmer, Loader } from 'semantic-ui-react';
-import { Event } from '../types/Event';
+import { Event } from '../models/Event';
 
 interface EventsTableProps {
   events: Event[];
