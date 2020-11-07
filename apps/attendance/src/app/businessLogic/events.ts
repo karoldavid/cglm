@@ -37,6 +37,16 @@ export async function createEvent(
   });
 }
 
+export async function getEvent(
+  event: APIGatewayProxyEvent
+): Promise<EventItem> {
+  const userId = getUserId(event);
+  const eventId = event.pathParameters.eventId;
+  logger.info('Get event.');
+
+  return eventAccess.getEvent(eventId, userId);
+}
+
 export async function eventExists(
   event: APIGatewayProxyEvent
 ): Promise<boolean> {

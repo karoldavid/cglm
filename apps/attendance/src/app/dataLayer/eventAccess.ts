@@ -26,7 +26,7 @@ export class EventAccess {
       })
       .promise();
 
-    const items = result.Items;
+    const { Items: items } = result;
     return items as EventItem[];
   }
 
@@ -43,8 +43,8 @@ export class EventAccess {
     return event;
   }
 
-  async eventExists(eventId: string, userId: string): Promise<boolean> {
-    logger.info('Checking if event exists', eventId);
+  async getEvent(eventId: string, userId: string): Promise<EventItem> {
+    logger.info('Getting event.');
     const result = await this.docClient
       .get({
         TableName: this.eventsTable,
@@ -55,7 +55,22 @@ export class EventAccess {
       })
       .promise();
 
-    logger.info('Get event: ', result);
+    const { Item: item } = result;
+    return item as EventItem;
+  }
+
+  async eventExists(eventId: string, userId: string): Promise<boolean> {
+    logger.info('Checking if event exists.');
+    const result = await this.docClient
+      .get({
+        TableName: this.eventsTable,
+        Key: {
+          userId: userId,
+          eventId: eventId,
+        },
+      })
+      .promise();
+
     return !!result.Item;
   }
 }
