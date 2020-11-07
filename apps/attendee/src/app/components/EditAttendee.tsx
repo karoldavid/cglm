@@ -1,13 +1,13 @@
-import * as React from 'react'
+import React from 'react';
+
+import Auth from '../auth/Auth';
 
 interface EditAttendeeProps {
+  auth: Auth;
 }
 
-interface EditAttendeeState {
-}
-
-export class EditAttendee extends React.PureComponent<EditAttendeeProps, EditAttendeeState> {
-  render() {
-    return <h1>EditAttendee</h1>
-  }
-}
+export const EditAttendee: React.FunctionComponent<EditAttendeeProps> = ({
+  auth,
+}) => {
+  return <h1>EditAttendee</h1>;
+};

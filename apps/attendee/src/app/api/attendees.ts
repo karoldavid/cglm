@@ -1,12 +1,12 @@
 import { apiEndpoint } from '../../config';
 import { CreateAttendeeRequest } from '../types/CreateAttendeeRequest';
-import { Attendee } from '../models/Attendee';
+import { AttendeeItem } from '../models/AttendeeItem';
 import Axios from 'axios';
 
 export async function getAttendees(
   idToken: string,
   eventId: string
-): Promise<Attendee[]> {
+): Promise<AttendeeItem[]> {
   const response = await Axios.get(
     `${apiEndpoint}/events/${eventId}/attendees`,
     {
@@ -23,7 +23,7 @@ export async function createAttendee(
   idToken: string,
   eventId,
   newAttendee: CreateAttendeeRequest
-): Promise<Attendee> {
+): Promise<AttendeeItem> {
   const response = await Axios.post(
     `${apiEndpoint}/events/${eventId}/attendees`,
     JSON.stringify(newAttendee),

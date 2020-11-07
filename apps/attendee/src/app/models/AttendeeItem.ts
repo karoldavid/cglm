@@ -1,4 +1,4 @@
-export interface Attendee {
+export interface AttendeeItem {
   userId: string;
   eventId: string;
   attendeeId: string;

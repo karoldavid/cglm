@@ -1,4 +1,4 @@
-export interface Event {
+export interface EventItem {
   userId: string;
   eventId: string;
   createdAt: string;

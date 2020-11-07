@@ -1,9 +1,10 @@
 import React from 'react';
-import { Table, Dimmer, Loader } from 'semantic-ui-react';
-import { Event } from '../models/Event';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { Button, Table, Loader } from 'semantic-ui-react';
+import { EventItem } from '../models/EventItem';
 
 interface EventsTableProps {
-  events: Event[];
+  events: EventItem[];
   loading: boolean;
 }
 
@@ -11,27 +12,44 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
   events,
   loading,
 }) => {
+  const history = useHistory();
+  const match = useRouteMatch();
+
+  const navigateToEventItem = (event: EventItem) => {
+    history.push(`${match.path}/${event.eventId}`);
+  };
+
   const renderTableHeader = () => {
     return (
       <Table.Header>
         <Table.HeaderCell>Name</Table.HeaderCell>
         <Table.HeaderCell>Date</Table.HeaderCell>
         <Table.HeaderCell>Organizer</Table.HeaderCell>
+        <Table.HeaderCell></Table.HeaderCell>
       </Table.Header>
     );
   };
 
-  const renderTableCells = (event: Event) => {
+  const renderTableCells = (event: EventItem) => {
     return (
       <>
         <Table.Cell>{event.name}</Table.Cell>
         <Table.Cell>{event.eventDate}</Table.Cell>
         <Table.Cell>-</Table.Cell>
+        <Table.Cell textAlign="right">
+          <Button
+            onClick={() => navigateToEventItem(event)}
+            size="medium"
+            color="blue"
+          >
+            Show
+          </Button>
+        </Table.Cell>
       </>
     );
   };
 
-  const renderTableRows = (events: Event[]) => {
+  const renderTableRows = (events: EventItem[]) => {
     return (
       <>
         {events.map((event) => (
@@ -41,11 +59,24 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
     );
   };
 
-  const renderTableContent = (events: Event[]) => {
+  const renderTableContent = (events: EventItem[]) => {
     return (
       <>
         {renderTableHeader()}
-        <Table.Body>{renderTableRows(events)}</Table.Body>
+        <Table.Body>
+          {loading ? (
+            <Table.Row>
+              <Table.Cell>-</Table.Cell>
+              <Table.Cell>-</Table.Cell>
+              <Table.Cell>-</Table.Cell>
+              <Table.Cell textAlign="right">
+                <Loader active inline />
+              </Table.Cell>
+            </Table.Row>
+          ) : (
+            renderTableRows(events)
+          )}
+        </Table.Body>
       </>
     );
   };
@@ -53,11 +84,11 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
   return (
     <>
       <Table attached>{renderTableContent(events)}</Table>
-      {loading && (
+      {/* {loading && (
         <Dimmer active inverted>
           <Loader inverted>Loading</Loader>
         </Dimmer>
-      )}
+      )} */}
     </>
   );
 };

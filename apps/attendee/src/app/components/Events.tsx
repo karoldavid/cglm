@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { getEvents } from '../api/events';
 import Auth from '../auth/Auth';
-import { Event } from '../models/Event';
+import { EventItem } from '../models/EventItem';
 import { EventsTable } from './EventsTable';
 
 interface EventsProps {
@@ -12,7 +12,7 @@ interface EventsProps {
 }
 
 interface EventsState {
-  events: Event[];
+  events: EventItem[];
   loading: boolean;
 }
 
@@ -41,13 +41,8 @@ export const Events: React.FunctionComponent<EventsProps> = ({ auth }) => {
 
   return (
     <>
-      <Container style={{ padding: '5em 0em' }}>
-        <Header size="medium">Events Overview</Header>
-        <EventsTable
-          events={eventsState.events}
-          loading={eventsState.loading}
-        />
-      </Container>
+      <Header size="medium">Events Overview</Header>
+      <EventsTable events={eventsState.events} loading={eventsState.loading} />
     </>
   );
 };

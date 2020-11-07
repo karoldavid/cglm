@@ -7,8 +7,9 @@ import { LogIn } from './components/Login';
 import { NotFound } from './components/NotFound';
 import { Home } from './components/Home';
 import { Events } from './components/Events';
-import { EditAttendee } from './components/EditAttendee';
+import { EventDetails } from './components/EventDetails';
 import { EventForm } from './components/EventForm';
+import { EditAttendee } from './components/EditAttendee';
 
 interface ContentProps {
   auth: Auth;
@@ -46,7 +47,15 @@ export const Content: React.FunctionComponent<ContentProps> = ({ auth }) => {
       />
 
       <Route
-        path="/:attendeeId/edit"
+        path="/events/:id"
+        exact
+        render={(props) => {
+          return <EventDetails {...props} auth={auth} />;
+        }}
+      />
+
+      <Route
+        path="/events/:id/attendees/:attendeeId/edit"
         exact
         render={(props) => {
           return <EditAttendee {...props} auth={auth} />;
