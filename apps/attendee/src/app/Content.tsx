@@ -3,55 +3,34 @@ import { Route, Switch } from 'react-router-dom';
 
 import Auth from './auth/Auth';
 
-import { LogIn } from './components/Login';
 import { NotFound } from './components/NotFound';
-import { Home } from './components/Home';
+import { Now } from './components/Now';
 import { Events } from './components/Events';
 import { EventDetails } from './components/EventDetails';
 import { EventForm } from './components/EventForm';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 interface ContentProps {
   auth: Auth;
 }
 
 export const Content: React.FunctionComponent<ContentProps> = ({ auth }) => {
-  if (!auth.isAuthenticated()) {
-    return <LogIn auth={auth} />;
-  }
-
   return (
     <Switch>
-      <Route
-        path="/"
-        exact
-        render={(props) => {
-          return <Home {...props} />;
-        }}
-      />
-
-      <Route
-        path="/events"
-        exact
-        render={(props) => {
-          return <Events {...props} auth={auth} />;
-        }}
-      />
-
-      <Route
+      <ProtectedRoute auth={auth} path="/" exact component={Now} />
+      <ProtectedRoute auth={auth} path="/events" exact component={Events} />
+      <ProtectedRoute
+        auth={auth}
         path="/events/new"
         exact
-        render={(props) => {
-          return <EventForm {...props} auth={auth} />;
-        }}
+        component={EventForm}
       />
-
-      <Route
+      <ProtectedRoute
+        auth={auth}
         path="/events/:id"
-        render={(props) => {
-          return <EventDetails {...props} auth={auth} />;
-        }}
+        exact={false}
+        component={EventDetails}
       />
-
       <Route component={NotFound} />
     </Switch>
   );

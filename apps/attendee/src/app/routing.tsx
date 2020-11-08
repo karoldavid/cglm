@@ -3,7 +3,7 @@ import Auth from './auth/Auth';
 import { Router, Route } from 'react-router-dom';
 import { Callback } from '@cglm/ui';
 import { createBrowserHistory as createHistory } from 'history';
-import { App } from './app';
+import { App } from './App';
 const history = createHistory();
 
 const auth = new Auth(history);
@@ -18,20 +18,18 @@ const handleAuthentication = (props: any) => {
 export const makeAuthRouting = () => {
   return (
     <Router history={history}>
-      <div>
-        <Route
-          path="/callback"
-          render={(props) => {
-            handleAuthentication(props);
-            return <Callback />;
-          }}
-        />
-        <Route
-          render={(props) => {
-            return <App auth={auth} {...props} />;
-          }}
-        />
-      </div>
+      <Route
+        path="/callback"
+        render={(props) => {
+          handleAuthentication(props);
+          return <Callback />;
+        }}
+      />
+      <Route
+        render={(props) => {
+          return <App {...props} auth={auth} />;
+        }}
+      />
     </Router>
   );
 };

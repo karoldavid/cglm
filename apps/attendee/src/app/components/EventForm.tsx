@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  Form,
-  Header,
-  Segment,
-} from 'semantic-ui-react';
+import { Button, Form, Header, Segment } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useHistory, NavLink } from 'react-router-dom';
 
 import { createEvent } from '../api/events';
 import { CreateEventRequest } from '../types/CreateEventRequest';
@@ -71,9 +66,14 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
             ref={register({ required: true })}
           />
         </Form.Field>
-        <Button size="medium" color="blue" type="submit">
-          Save
-        </Button>
+        <Button.Group>
+          <Button as={NavLink} to="/events">
+            Cancel
+          </Button>
+          <Button size="medium" color="blue" type="submit">
+            Save
+          </Button>
+        </Button.Group>
       </Form>
     </Segment>
   );

@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {
-  useParams,
-  useHistory,
-  useRouteMatch,
-  Route,
-  Switch,
-} from 'react-router-dom';
+import { useParams, useHistory, useRouteMatch, Switch } from 'react-router-dom';
 import { Header, Card, Loader, Segment, Button } from 'semantic-ui-react';
 
 import { getEvent } from '../api/events';
 import Auth from '../auth/Auth';
 import { EventItem } from '../models/EventItem';
+
+import { ProtectedRoute } from './ProtectedRoute';
 import { Attendees } from './Attendees';
 import { EditAttendee } from './EditAttendee';
 import { AttendeeForm } from './AttendeeForm';
@@ -91,26 +87,24 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
         </Button>
       </Segment>
       <Switch>
-        <Route
+        <ProtectedRoute
+          auth={auth}
           path="/events/:id/attendees"
           exact
-          render={(props) => {
-            return <Attendees {...props} auth={auth} />;
-          }}
+          component={Attendees}
         />
-        <Route
+        <ProtectedRoute
+          auth={auth}
           path="/events/:id/attendees/new"
           exact
-          render={(props) => {
-            return <AttendeeForm {...props} auth={auth} />;
-          }}
+          component={AttendeeForm}
         />
 
-        <Route
+        <ProtectedRoute
+          auth={auth}
           path="/events/:id/attendees/:attendeeId/edit"
-          render={(props) => {
-            return <EditAttendee {...props} auth={auth} />;
-          }}
+          exact={false}
+          component={EditAttendee}
         />
       </Switch>
     </>

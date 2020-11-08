@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, NavLink } from 'react-router-dom';
 import { Button, Form, Segment, Header } from 'semantic-ui-react';
 
 import { createAttendee } from '../api/attendees';
@@ -39,12 +39,12 @@ export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
       await createAttendee(token, id, data);
       setAttendeeState({ loading: false });
 
-      history.push(`/events/${id}`);
+      history.push(`/events/${id}/attendees`);
     } catch (e) {
       setAttendeeState({ loading: false });
 
       alert(`Failed to create attendee: ${e.message}`);
-      history.push(`/events/${id}`);
+      history.push(`/events/${id}/attendees`);
     }
   };
 
@@ -69,9 +69,14 @@ export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
             ref={register({ required: true })}
           />
         </Form.Field>
-        <Button size="medium" color="blue" type="submit">
-          Save
-        </Button>
+        <Button.Group>
+          <Button as={NavLink} to={`/events/${id}/attendees`}>
+            Cancel
+          </Button>
+          <Button size="medium" color="blue" type="submit">
+            Save
+          </Button>
+        </Button.Group>
       </Form>
     </Segment>
   );
