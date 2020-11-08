@@ -14,7 +14,7 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
   const match = useRouteMatch();
 
   const navigateToEventItem = (event: EventItem) => {
-    history.push(`${match.path}/${event.eventId}`);
+    history.push(`${match.path}/${event.eventId}/attendees`);
   };
 
   const renderTableHeader = () => {

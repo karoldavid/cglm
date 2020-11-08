@@ -1,8 +1,10 @@
 import React from 'react';
-import { Header } from 'semantic-ui-react';
+import { Header, Segment } from 'semantic-ui-react';
 
 interface HomeProps {}
 
 export const Home: React.FunctionComponent<HomeProps> = () => (
-  <Header as="h2">Welcome!</Header>
+  <Segment>
+    <Header size="medium">Your Digital Sheets</Header>
+  </Segment>
 );

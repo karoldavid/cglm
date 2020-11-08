@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
+import {
+  useParams,
+  useHistory,
+  useRouteMatch,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import { Header, Card, Loader, Segment, Button } from 'semantic-ui-react';
 
 import { getEvent } from '../api/events';
 import Auth from '../auth/Auth';
 import { EventItem } from '../models/EventItem';
+import { Attendees } from './Attendees';
+import { EditAttendee } from './EditAttendee';
+import { AttendeeForm } from './AttendeeForm';
 
 interface EventDetailsProps {
   auth: Auth;
@@ -48,35 +57,62 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
   }, []);
 
   return (
-    <Segment>
-      <Header size="medium">Event Details</Header>
-      <Card
-        header={
-          (!eventState.loading && eventState.event && eventState.event.name) ||
-          ''
-        }
-        meta={
-          (!eventState.loading &&
-            eventState.event &&
-            eventState.event.eventDate) ||
-          ''
-        }
-        description={
-          (!eventState.loading &&
-            eventState.event &&
-            'Please add an event description.') || (
-            <Loader active inline="centered" />
-          )
-        }
-      />
-      <Button
-        size="medium"
-        color="blue"
-        type="button"
-        onClick={navigateToNewAttendee}
-      >
-        Add Attendee
-      </Button>
-    </Segment>
+    <>
+      <Segment>
+        <Header size="medium">Event Details</Header>
+        <Card
+          header={
+            (!eventState.loading &&
+              eventState.event &&
+              eventState.event.name) ||
+            ''
+          }
+          meta={
+            (!eventState.loading &&
+              eventState.event &&
+              eventState.event.eventDate) ||
+            ''
+          }
+          description={
+            (!eventState.loading &&
+              eventState.event &&
+              'Please add an event description.') || (
+              <Loader active inline="centered" />
+            )
+          }
+        />
+        <Button
+          size="medium"
+          color="blue"
+          type="button"
+          onClick={navigateToNewAttendee}
+        >
+          Add Attendee
+        </Button>
+      </Segment>
+      <Switch>
+        <Route
+          path="/events/:id/attendees"
+          exact
+          render={(props) => {
+            return <Attendees {...props} auth={auth} />;
+          }}
+        />
+        <Route
+          path="/events/:id/attendees/new"
+          exact
+          render={(props) => {
+            return <AttendeeForm {...props} auth={auth} />;
+          }}
+        />
+
+        <Route
+          path="/events/:id/attendees/:attendeeId/edit"
+          render={(props) => {
+            return <EditAttendee {...props} auth={auth} />;
+          }}
+        />
+      </Switch>
+    </>
   );
 };
