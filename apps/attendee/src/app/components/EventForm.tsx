@@ -67,10 +67,10 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
           />
         </Form.Field>
         <Button.Group>
-          <Button as={NavLink} to="/events">
+          <Button basic color="grey" size="medium" as={NavLink} to="/events">
             Cancel
           </Button>
-          <Button size="medium" color="blue" type="submit">
+          <Button basic color="blue" size="medium" type="submit">
             Save
           </Button>
         </Button.Group>

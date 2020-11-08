@@ -50,7 +50,7 @@ export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
 
   return (
     <Segment loading={attendeeState.loading}>
-      <Header size="medium">Add an attendee to the event</Header>
+      <Header size="medium">Add attendee</Header>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field>
           <input
@@ -70,10 +70,16 @@ export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
           />
         </Form.Field>
         <Button.Group>
-          <Button as={NavLink} to={`/events/${id}/attendees`}>
+          <Button
+            basic
+            color="grey"
+            size="medium"
+            as={NavLink}
+            to={`/events/${id}/attendees`}
+          >
             Cancel
           </Button>
-          <Button size="medium" color="blue" type="submit">
+          <Button basic color="blue" size="medium" type="submit">
             Save
           </Button>
         </Button.Group>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory, useRouteMatch, NavLink } from 'react-router-dom';
-import { Button, Table, Segment } from 'semantic-ui-react';
+import { Button, Table } from 'semantic-ui-react';
 import { EventItem } from '../models/EventItem';
 
 interface EventsTableProps {
@@ -24,7 +24,9 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
         <Table.HeaderCell>Date</Table.HeaderCell>
         <Table.HeaderCell>Organizer</Table.HeaderCell>
         <Table.HeaderCell textAlign="right">
-          <NavLink to="/events/new">new</NavLink>
+          <Button as={NavLink} basic color="blue" to="/events/new">
+            New
+          </Button>
         </Table.HeaderCell>
       </Table.Header>
     );
@@ -38,7 +40,7 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
         <Table.Cell>-</Table.Cell>
         <Table.Cell textAlign="right">
           <NavLink to={`${match.path}/${event.eventId}/attendees`}>
-            show
+            Show
           </NavLink>
         </Table.Cell>
       </>

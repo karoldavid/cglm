@@ -8,7 +8,7 @@ import { EventItem } from '../models/EventItem';
 
 import { ProtectedRoute } from './ProtectedRoute';
 import { Attendees } from './Attendees';
-import { EditAttendee } from './EditAttendee';
+import { AttendeeDetails } from './AttendeeDetails';
 import { AttendeeForm } from './AttendeeForm';
 
 interface EventDetailsProps {
@@ -78,8 +78,9 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
           }
         />
         <Button
-          size="medium"
+          basic
           color="blue"
+          size="medium"
           type="button"
           onClick={navigateToNewAttendee}
         >
@@ -102,9 +103,9 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
 
         <ProtectedRoute
           auth={auth}
-          path="/events/:id/attendees/:attendeeId/edit"
-          exact={false}
-          component={EditAttendee}
+          path="/events/:id/attendees/:attendeeId"
+          exact
+          component={AttendeeDetails}
         />
       </Switch>
     </>

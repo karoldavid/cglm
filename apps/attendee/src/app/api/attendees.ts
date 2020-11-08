@@ -19,6 +19,23 @@ export async function getAttendees(
   return response.data.items;
 }
 
+export async function getAttendee(
+  idToken: string,
+  eventId: string,
+  attendeeId: string
+): Promise<AttendeeItem> {
+  const response = await Axios.get(
+    `${apiEndpoint}/events/${eventId}/attendees/${attendeeId}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+    }
+  );
+  return response.data.item;
+}
+
 export async function createAttendee(
   idToken: string,
   eventId,
