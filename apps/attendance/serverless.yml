@@ -47,6 +47,7 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:Query
+        - dynamodb:GetItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ATTENDEES_TABLE}/index/${self:provider.environment.ATTENDEE_ID_INDEX}
 
 custom:
@@ -127,17 +128,6 @@ functions:
 
   GetAttendees:
     handler: apps/attendance/src/app/lambda/http/getAttendees.handler
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #       - dynamodb:Query
-    #       - dynamodb:GetItem
-    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
-    #   - Effect: Allow
-    #     Action:
-    #       - dynamodb:Query
-    #       - dynamodb:GetItem
-    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}/index/${self:provider.environment.INDEX_NAME}
     events:
       - http:
           method: get
@@ -145,13 +135,17 @@ functions:
           cors: true
           authorizer: Auth
 
+  GetAttendee:
+    handler: apps/attendance/src/app/lambda/http/getAttendee.handler
+    events:
+      - http:
+          method: get
+          path: events/{eventId}/attendees/{attendeeId}
+          cors: true
+          authorizer: Auth
+
   CreateAttendee:
     handler: apps/attendance/src/app/lambda/http/createAttendee.handler
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #       - dynamodb:PutItem
-    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
     events:
       - http:
           method: post

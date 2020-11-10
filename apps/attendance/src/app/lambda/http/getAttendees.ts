@@ -18,9 +18,6 @@ export const handler = middy(
     if (!validEventId) {
       return {
         statusCode: 404,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
         body: JSON.stringify({
           error: 'Event does not exist.',
         }),
@@ -31,9 +28,6 @@ export const handler = middy(
 
     return {
       statusCode: 201,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
       body: JSON.stringify({
         items: attendeeItems,
       }),

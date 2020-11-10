@@ -8,7 +8,8 @@ const logger = createLogger('attendeeAccess');
 export class AttendeeAccess {
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
-    private readonly attendeesTable = process.env.ATTENDEES_TABLE
+    private readonly attendeesTable = process.env.ATTENDEES_TABLE,
+    private readonly attendeeIdIndex = process.env.ATTENDEE_ID_INDEX
   ) {}
 
   async getAttendees(userId: string, eventId: string): Promise<AttendeeItem[]> {
@@ -17,6 +18,12 @@ export class AttendeeAccess {
     const attendees = await this.getAttendeesPerEvent(eventId);
 
     return attendees;
+  }
+
+  async getAttendee(attendeeId: string): Promise<AttendeeItem> {
+    const attendee = await this.getAttendeeForEvent(attendeeId);
+
+    return attendee;
   }
 
   async createAttendee(attendee: AttendeeItem): Promise<AttendeeItem> {
@@ -46,5 +53,22 @@ export class AttendeeAccess {
       .promise();
 
     return result.Items;
+  }
+
+  async getAttendeeForEvent(attendeeId: string): Promise<any> {
+    logger.info('Getting an attendee for an event.');
+
+    const result = await this.docClient
+      .query({
+        TableName: this.attendeesTable,
+        IndexName: this.attendeeIdIndex,
+        KeyConditionExpression: 'attendeeId = :attendeeId',
+        ExpressionAttributeValues: {
+          ':attendeeId': attendeeId,
+        },
+      })
+      .promise();
+
+    return result.Items[0];
   }
 }

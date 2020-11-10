@@ -21,6 +21,16 @@ export async function getAttendees(
   return attendeeAccess.getAttendees(userId, eventId);
 }
 
+export async function getAttendee(
+  event: APIGatewayProxyEvent
+): Promise<AttendeeItem> {
+  const { attendeeId } = event.pathParameters;
+
+  logger.info('Getting attendee for an event.');
+
+  return attendeeAccess.getAttendee(attendeeId);
+}
+
 export async function createAttendee(
   createAttendeeRequest: CreateAttendeeRequest,
   event: APIGatewayProxyEvent
