@@ -1,12 +1,12 @@
 # ATTENDEE - Covid Cluster Tracing Simplified
 
-Highly scalable, extendable, and simple to use cloud based _Contactless Real Time Guest List Manager_.
+Highly scalable, extendable, and simple to use cloud based _Contactless Real Time Guest List Manager_ accessible to anyone anytime anywhere.
 
 # Technologies
 
 - [AWS Lambda](https://aws.amazon.com/lambda/)
 - [AWS DynamoDB](https://aws.amazon.com/dynamodb)
-- [AWS Simple Cloud Storage](https://aws.amazon.com/dynamodb)
+- [AWS Simple Cloud Storage](https://aws.amazon.com/s3)
 - [AWS Simple Notification Service](https://aws.amazon.com/sns)
 - [Serverless Framework](https://www.serverless.com/)
 - [Auth0](https://auth0.com/)
