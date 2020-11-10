@@ -38,7 +38,7 @@ export async function getAttendee(
 
 export async function createAttendee(
   idToken: string,
-  eventId,
+  eventId: string,
   newAttendee: CreateAttendeeRequest
 ): Promise<AttendeeItem> {
   const response = await Axios.post(

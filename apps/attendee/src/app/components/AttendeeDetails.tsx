@@ -68,7 +68,13 @@ export const AttendeeDetails: React.FunctionComponent<AttendeeDetailsProps> = ({
               attendeeState.attendee.email) ||
             ''
           }
-          description="-"
+          description={
+            (!attendeeState.loading &&
+              attendeeState.attendee &&
+              '-') || (
+              <Loader active inline="centered" />
+            )
+          }
         />
         <Button
           basic
