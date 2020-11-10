@@ -22,6 +22,7 @@ provider:
     ATTENDEES_TABLE: Attendees-${self:provider.stage}
     INDEX_NAME: UserIdIndex
     ATTENDEE_ID_INDEX: AttendeeIdIndex
+    QRCODES_S3_BUCKET: serverless-attendee-qrcodes-${self:provider.stage}
 
   iamRoleStatements:
     - Effect: Allow
@@ -49,6 +50,11 @@ provider:
         - dynamodb:Query
         - dynamodb:GetItem
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ATTENDEES_TABLE}/index/${self:provider.environment.ATTENDEE_ID_INDEX}
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: arn:aws:s3:::${self:provider.environment.QRCODES_S3_BUCKET}/*
 
 custom:
   serverless-offline:
