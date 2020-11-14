@@ -1,8 +1,21 @@
-# ATTENDEE - Covid Cluster Tracing Simplified
+# ATTENDEE
+#### Covid Cluster Tracing Simplified
 
-Highly scalable, extendable, and simple to use cloud based _**Contactless Real Time Guest List Manager**_ accessible to anyone anytime anywhere.
+Highly scalable, extendable, and simple to use cloud based _**Contactless Real Time Guest List Manager**_ - accessible to anyone anytime anywhere.
 
-# Technologies
+## Features
+
+Work in progress...
+
+## Setup
+
+Work in progress...
+
+## Usage
+
+Work in progress...
+
+## Technologies
 
 * [AWS Lambda](https://aws.amazon.com/lambda/)
 * [AWS DynamoDB](https://aws.amazon.com/dynamodb)
@@ -21,9 +34,17 @@ Highly scalable, extendable, and simple to use cloud based _**Contactless Real T
 
 This project was generated using [Nx](https://nx.dev).
 
-## Please Note
+## Project Status
 
-The ATTENDEE Project is still work in progress. The first minimal prototype is going to be published soon.
+The ATTENDEE Project is still work in progress. ATTENDEE minimal Go-live is going to happen soon.
+
+## Inspiration
+
+Work in progress...
+
+## Contributing
+
+Work in progress...
 
 ## License
 
