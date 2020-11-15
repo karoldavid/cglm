@@ -47,7 +47,7 @@ export const AppMenu: React.FunctionComponent<AppMenuProps> = ({ auth }) => {
       </Menu.Item>
       <Menu.Item
         name="events"
-        active={isAuthenticated && pathname === '/events'}
+        active={isAuthenticated && pathname.startsWith('/events')}
       >
         {isAuthenticated ? <Link to="/events">Events</Link> : 'Events'}
       </Menu.Item>

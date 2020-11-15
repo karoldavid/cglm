@@ -1,7 +1,8 @@
+import Axios from 'axios';
+
 import { apiEndpoint } from '../../config';
 import { CreateEventRequest } from '../types/CreateEventRequest';
 import { EventItem } from '../models/EventItem';
-import Axios from 'axios';
 
 export async function getEvents(idToken: string): Promise<EventItem[]> {
   const response = await Axios.get(`${apiEndpoint}/events`, {

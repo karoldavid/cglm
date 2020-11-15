@@ -33,7 +33,7 @@ export const Attendees: React.FunctionComponent<AttendeesProps> = ({
       const attendees = await getAttendees(token, eventId);
       setAttendeesState({ attendees, loading: false });
     } catch (e) {
-      alert(`Failed to fetch events: ${e.message}`);
+      alert(`Failed to fetch attendees: ${e.message}`);
       setAttendeesState({ attendees: [], loading: false });
     }
   };

@@ -1,7 +1,8 @@
+import Axios from 'axios';
+
 import { apiEndpoint } from '../../config';
 import { CreateAttendeeRequest } from '../types/CreateAttendeeRequest';
 import { AttendeeItem } from '../models/AttendeeItem';
-import Axios from 'axios';
 
 export async function getAttendees(
   idToken: string,
