@@ -8,7 +8,7 @@ interface EventsTableProps {
 }
 
 export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
-  events,
+  events = [],
 }) => {
   const history = useHistory();
   const match = useRouteMatch();

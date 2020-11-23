@@ -3,7 +3,7 @@ import { Button, Form, Header, Segment } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { useHistory, NavLink } from 'react-router-dom';
 
-import { createEvent } from '../api/events';
+import { useCreateEvent } from '../api/events';
 import { CreateEventRequest } from '../types/CreateEventRequest';
 import Auth from '../auth/Auth';
 
@@ -16,37 +16,26 @@ type EventItem = {
   eventDate: string;
 };
 
-interface EventState {
-  loading: boolean;
-}
-
 export const EventForm: React.FunctionComponent<EventFormProps> = ({
   auth,
 }) => {
   const history = useHistory();
-  const [eventState, setEventState] = useState<EventState>({
-    loading: false,
-  });
+
+  const [mutate, { isLoading }] = useCreateEvent(auth.getIdToken());
+
   const { register, handleSubmit } = useForm<EventItem>();
 
   const onSubmit = async (data: CreateEventRequest) => {
-    const token = auth.getIdToken();
     try {
-      setEventState({ loading: true });
-      await createEvent(token, data);
-      setEventState({ loading: false });
-
+      await mutate({ newEvent: data });
       history.push('/events');
     } catch (e) {
-      setEventState({ loading: false });
-
-      alert(`Failed to create event: ${e.message}`);
-      history.push('/events');
+      alert(e.message);
     }
   };
 
   return (
-    <Segment loading={eventState.loading}>
+    <Segment loading={isLoading}>
       <Header size="medium">Create a new event</Header>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field>

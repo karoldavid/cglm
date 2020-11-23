@@ -7,23 +7,14 @@ import {
   Switch,
   Link,
 } from 'react-router-dom';
-import {
-  Card,
-  Loader,
-  Segment,
-  Button,
-  Icon,
-  Grid,
-  Divider,
-  Menu,
-} from 'semantic-ui-react';
+import { Segment, Button, Grid, Divider, Menu } from 'semantic-ui-react';
 
-import { getEvent } from '../api/events';
+import { useEvent } from '../api/events';
 import { createQrCode } from '../api/qrCodes';
 import Auth from '../auth/Auth';
-import { EventItem } from '../models/EventItem';
 
 import { ProtectedRoute } from './ProtectedRoute';
+import { EventDetailsCard } from './EventDetailsCard';
 import { Attendees } from './Attendees';
 import { AttendeeDetails } from './AttendeeDetails';
 import { AttendeeForm } from './AttendeeForm';
@@ -33,11 +24,6 @@ import { QrCodeItem } from '../models/QrCodeItem';
 
 interface EventDetailsProps {
   auth: Auth;
-}
-
-interface EventState {
-  event: EventItem;
-  loading: boolean;
 }
 
 interface QrCodeState {
@@ -53,10 +39,7 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
   const { pathname } = useLocation();
   const { id } = useParams();
 
-  const [eventState, setEventState] = useState<EventState>({
-    event: null,
-    loading: false,
-  });
+  const { data, isLoading } = useEvent(auth.getIdToken(), id);
 
   const [qrCodeState, setQrCodeState] = useState<QrCodeState>({
     qrCode: null,
@@ -82,22 +65,6 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
     }
   };
 
-  const getEventRequest = async (token: string, eventId: string) => {
-    try {
-      setEventState((prevState) => ({ ...prevState, loading: true }));
-      const event = await getEvent(token, eventId);
-      setEventState({ event, loading: false });
-    } catch (e) {
-      alert(`Failed to fetch event: ${e.message}`);
-      setEventState({ event: null, loading: false });
-    }
-  };
-
-  useEffect(() => {
-    const token = auth.getIdToken();
-    getEventRequest(token, id);
-  }, []);
-
   return (
     <>
       <Segment>
@@ -105,38 +72,7 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
           <Divider vertical />
           <Grid.Row>
             <Grid.Column>
-              <Card>
-                <Card.Content>
-                  <Card.Header>
-                    {(!eventState.loading &&
-                      eventState.event &&
-                      eventState.event.name) ||
-                      ''}
-                  </Card.Header>
-                  <Card.Meta>
-                    <span className="date">
-                      {(!eventState.loading &&
-                        eventState.event &&
-                        eventState.event.eventDate) ||
-                        ''}
-                    </span>
-                  </Card.Meta>
-                  <Card.Description>
-                    {(!eventState.loading &&
-                      eventState.event &&
-                      'Please add an event description.') || (
-                      <Loader active inline="centered" />
-                    )}
-                  </Card.Description>
-                </Card.Content>
-
-                <Card.Content extra>
-                  <a>
-                    <Icon name="user" />
-                    22 Attendants
-                  </a>
-                </Card.Content>
-              </Card>
+              <EventDetailsCard data={data} loading={isLoading} />
             </Grid.Column>
 
             <Grid.Column></Grid.Column>

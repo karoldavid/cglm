@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useHistory, useParams, NavLink } from 'react-router-dom';
 import { Button, Form, Segment, Header } from 'semantic-ui-react';
 
-import { createAttendee } from '../api/attendees';
+import { useCreateAttendee } from '../api/attendees';
 import { CreateAttendeeRequest } from '../types/CreateAttendeeRequest';
 import Auth from '../auth/Auth';
 
@@ -27,29 +27,21 @@ export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
 
   const { id } = useParams();
 
-  const [attendeeState, setAttendeeState] = useState<AttendeeState>({
-    loading: false,
-  });
+  const [mutate, { isLoading }] = useCreateAttendee(auth.getIdToken());
+
   const { register, handleSubmit } = useForm<AttendeeItem>();
 
   const onSubmit = async (data: CreateAttendeeRequest) => {
-    const token = auth.getIdToken();
     try {
-      setAttendeeState({ loading: true });
-      await createAttendee(token, id, data);
-      setAttendeeState({ loading: false });
-
+      await mutate({ eventId: id, newAttendee: data });
       history.push(`/events/${id}/attendees`);
     } catch (e) {
-      setAttendeeState({ loading: false });
-
-      alert(`Failed to create attendee: ${e.message}`);
-      history.push(`/events/${id}/attendees`);
+      alert(e.message);
     }
   };
 
   return (
-    <Segment loading={attendeeState.loading}>
+    <Segment loading={isLoading}>
       <Header size="medium">Add attendee</Header>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field>

@@ -1,56 +1,59 @@
-import Axios from 'axios';
+import { useQuery, useMutation } from 'react-query';
 
 import { apiEndpoint } from '../../config';
 import { CreateAttendeeRequest } from '../types/CreateAttendeeRequest';
 import { AttendeeItem } from '../models/AttendeeItem';
 
-export async function getAttendees(
-  idToken: string,
-  eventId: string
-): Promise<AttendeeItem[]> {
-  const response = await Axios.get(
-    `${apiEndpoint}/events/${eventId}/attendees`,
-    {
+interface AttendeesData {
+  items: AttendeeItem[];
+}
+
+interface AttendeeData {
+  item: AttendeeItem;
+}
+
+interface CreateAttendeeVariables {
+  eventId: string;
+  newAttendee: CreateAttendeeRequest;
+}
+
+export function useAttendees(idToken: string, eventId: string) {
+  return useQuery<AttendeesData, Error>(['list-attendees', eventId], () =>
+    fetch(`${apiEndpoint}/events/${eventId}/attendees`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }
+    }).then((res) => res.json())
   );
-  return response.data.items;
 }
 
-export async function getAttendee(
+export function useAttendee(
   idToken: string,
   eventId: string,
   attendeeId: string
-): Promise<AttendeeItem> {
-  const response = await Axios.get(
-    `${apiEndpoint}/events/${eventId}/attendees/${attendeeId}`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`,
-      },
-    }
+) {
+  return useQuery<AttendeeData, Error>(
+    ['list-attendees', eventId, attendeeId],
+    () =>
+      fetch(`${apiEndpoint}/events/${eventId}/attendees/${attendeeId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+      }).then((res) => res.json())
   );
-  return response.data.item;
 }
 
-export async function createAttendee(
-  idToken: string,
-  eventId: string,
-  newAttendee: CreateAttendeeRequest
-): Promise<AttendeeItem> {
-  const response = await Axios.post(
-    `${apiEndpoint}/events/${eventId}/attendees`,
-    JSON.stringify(newAttendee),
-    {
+export function useCreateAttendee(idToken: string) {
+  return useMutation(({ eventId, newAttendee }: CreateAttendeeVariables) =>
+    fetch(`${apiEndpoint}/events/${eventId}/attendees`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }
+      body: JSON.stringify(newAttendee),
+    }).then((res) => res.json())
   );
-  return response.data.item;
 }
