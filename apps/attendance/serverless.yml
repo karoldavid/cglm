@@ -195,6 +195,13 @@ functions:
           cors: true
           authorizer: Auth
 
+  OnAttendeeSignup:
+    handler: apps/attendance/src/app/lambda/dynamodb/onAttendeeSignup.handler
+    events:
+      - stream:
+          type: dynamodb
+          arn: !GetAtt AttendeesDynamoDBTable.StreamArn
+
 resources:
   Resources:
     EventsDynamoDBTable:
@@ -240,6 +247,8 @@ resources:
           - AttributeName: timestamp
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
         TableName: ${self:provider.environment.ATTENDEES_TABLE}
         GlobalSecondaryIndexes:
           - IndexName: ${self:provider.environment.ATTENDEE_ID_INDEX}
