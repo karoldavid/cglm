@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "ConfirmationEmailTemplate",
+    "SubjectPart": "Registration Confirmation",
+    "HtmlPart": "<h1>Dear {{name}},</h1><p>You successfully registered your attendance.</p><p>Best regards,</p><p>Your attendee team.</p>",
+    "TextPart": "Dear {{name}},\r\nYou successfully registered your attendance.\r\nBest regards,\r\nYour attendee team.</p>"
+  }
+}
