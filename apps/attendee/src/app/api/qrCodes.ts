@@ -1,51 +1,50 @@
-import Axios from 'axios';
+import { useQuery, useMutation } from 'react-query';
 
 import { apiEndpoint } from '../../config';
 import { QrCodeItem } from '../models/QrCodeItem';
 
-export async function getQrCodes(
-  idToken: string,
-  eventId: string
-): Promise<QrCodeItem[]> {
-  const response = await Axios.get(`${apiEndpoint}/events/${eventId}/qrcodes`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${idToken}`,
-    },
-  });
-  return response.data.items;
+interface QrCodesData {
+  items: QrCodeItem[];
 }
 
-export async function getQrCode(
-  idToken: string,
-  eventId: string,
-  qrCodeId: string
-): Promise<QrCodeItem> {
-  const response = await Axios.get(
-    `${apiEndpoint}/events/${eventId}/qrcodes/${qrCodeId}`,
-    {
+interface QrCodeData {
+  item: QrCodeItem;
+}
+
+interface CreateQrCodeVariables {
+  eventId: string;
+}
+
+export function useQrCodes(idToken: string, eventId: string) {
+  return useQuery<QrCodesData, Error>(['list-qrcodes', eventId], () =>
+    fetch(`${apiEndpoint}/events/${eventId}/qrcodes`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }
+    }).then((res) => res.json())
   );
-  return response.data.item;
 }
 
-export async function createQrCode(
-  idToken: string,
-  eventId: string
-): Promise<QrCodeItem> {
-  const response = await Axios.post(
-    `${apiEndpoint}/events/${eventId}/qrcodes`,
-    null,
-    {
+export function useQrCode(idToken: string, eventId: string, qrCodeId: string) {
+  return useQuery<QrCodeData, Error>(['list-qrcodes', eventId, qrCodeId], () =>
+    fetch(`${apiEndpoint}/events/${eventId}/qrcodes/${qrCodeId}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }
+    }).then((res) => res.json())
   );
-  return response.data.item;
+}
+
+export function useCreateQrCode(idToken: string) {
+  return useMutation(({ eventId }: CreateQrCodeVariables) =>
+    fetch(`${apiEndpoint}/events/${eventId}/qrcodes`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+    }).then((res) => res.json())
+  );
 }

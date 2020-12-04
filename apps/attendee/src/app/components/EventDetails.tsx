@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   useParams,
   useHistory,
@@ -10,7 +10,7 @@ import {
 import { Segment, Button, Grid, Divider, Menu } from 'semantic-ui-react';
 
 import { useEvent } from '../api/events';
-import { createQrCode } from '../api/qrCodes';
+import { useCreateQrCode } from '../api/qrCodes';
 import Auth from '../auth/Auth';
 
 import { ProtectedRoute } from './ProtectedRoute';
@@ -41,28 +41,16 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
 
   const { data, isLoading } = useEvent(auth.getIdToken(), id);
 
-  const [qrCodeState, setQrCodeState] = useState<QrCodeState>({
-    qrCode: null,
-    loading: false,
-  });
+  const [mutate, { isLoading: isLoadingCreateQrCode }] = useCreateQrCode(
+    auth.getIdToken()
+  );
+
+  const createQrCode = () => {
+    mutate({ eventId: id });
+  };
 
   const navigateToNewAttendee = () => {
     history.push(`${match.url}/attendees/new`);
-  };
-
-  const createQrCodeRequest = async () => {
-    setQrCodeState({ qrCode: null, loading: true });
-    try {
-      const token = auth.getIdToken();
-      const qrCode = await createQrCode(token, id);
-
-      setQrCodeState({ qrCode: qrCode, loading: false });
-
-      history.push(`${match.url}/qrcodes/${qrCode.qrCodeId}`);
-    } catch (e) {
-      setQrCodeState({ qrCode: null, loading: false });
-      alert(`Failed to create QR-Code: ${e.message}`);
-    }
   };
 
   return (
@@ -105,8 +93,8 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
               color="blue"
               size="medium"
               type="button"
-              loading={qrCodeState.loading}
-              onClick={createQrCodeRequest}
+              loading={isLoadingCreateQrCode}
+              onClick={createQrCode}
             >
               Create QR-Code
             </Button>

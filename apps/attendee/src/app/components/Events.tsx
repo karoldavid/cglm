@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Header, Segment } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 

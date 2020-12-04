@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Form, Header, Segment } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { useHistory, NavLink } from 'react-router-dom';
