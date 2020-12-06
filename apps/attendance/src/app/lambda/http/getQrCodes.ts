@@ -24,12 +24,12 @@ export const handler = middy(
       };
     }
 
-    const qrCodeItems = await getQrCodes(event);
+    const items = await getQrCodes(event);
 
     return {
-      statusCode: 201,
+      statusCode: 200,
       body: JSON.stringify({
-        items: qrCodeItems,
+        items,
       }),
     };
   }

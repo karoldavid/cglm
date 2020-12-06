@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import * as uuid from 'uuid';
 import QRCode from 'qrcode';
+import TinyUrl from 'tinyurl';
 
 import { QrCodeItem } from '../models/QrCodeItem';
 import { createLogger } from '../utils/logger';
@@ -45,13 +46,16 @@ export async function createQrCode(
 
   const url = `${PUBLIC_URL}/public/events/${eventId}/attendees/new?qrCodeId=${qrCodeId}`;
 
-  const base64 = await QRCode.toDataURL(url);
+  const shortUrl = await TinyUrl.shorten(url);
+
+  const base64 = await QRCode.toDataURL(shortUrl);
 
   return await qrCodeAccess.createQrCode({
     userId: userId,
     eventId: eventId,
     qrCodeId: qrCodeId,
     base64: base64,
+    shortUrl: shortUrl,
     timestamp: new Date().toISOString(),
     expiration: 3600000,
   });

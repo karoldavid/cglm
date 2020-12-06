@@ -14,9 +14,16 @@ export const handler = middy(
 
     const items = await getEvents(event);
 
+    if (items) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ items }),
+      };
+    }
+
     return {
-      statusCode: 200,
-      body: JSON.stringify({ items }),
+      statusCode: 404,
+      body: '',
     };
   }
 );

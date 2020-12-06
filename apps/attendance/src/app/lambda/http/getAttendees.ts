@@ -24,12 +24,12 @@ export const handler = middy(
       };
     }
 
-    const attendeeItems = await getAttendees(event);
+    const items = await getAttendees(event);
 
     return {
-      statusCode: 201,
+      statusCode: 200,
       body: JSON.stringify({
-        items: attendeeItems,
+        items,
       }),
     };
   }
