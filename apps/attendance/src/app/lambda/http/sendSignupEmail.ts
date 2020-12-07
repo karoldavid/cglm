@@ -8,7 +8,7 @@ import { sendSignupEmail } from '../../ses/signupEmail';
 
 const logger = createLogger('sendSignupEmail');
 
-const SES_SENDER_EMAIL = process.env.sesSenderEmai;
+const SES_SENDER_EMAIL = process.env.sesSenderEmail;
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
