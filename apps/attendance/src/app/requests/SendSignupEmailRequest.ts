@@ -5,4 +5,5 @@ export interface SendSignupEmailRequest {
   name: string;
   recipient: string;
   url: string;
+  qrcode: string;
 }
