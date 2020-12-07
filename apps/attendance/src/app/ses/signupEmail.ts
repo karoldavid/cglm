@@ -1,5 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { SendTemplatedEmailResponse } from 'aws-sdk/clients/ses';
+import { SendSignupEmailRequest } from '../requests/SendSignupEmailRequest';
 
 import { createLogger } from '../utils/logger';
 
@@ -14,8 +15,7 @@ const { TemplateName: templateName } = templateParams.Template;
 export const sendSignupEmail = async (
   recipient: string,
   sender: string,
-  name: string,
-  url: string
+  emailParams: SendSignupEmailRequest
 ): Promise<SendTemplatedEmailResponse> => {
   try {
     logger.info(`Checking if template ${templateName} exists.`);
@@ -28,8 +28,7 @@ export const sendSignupEmail = async (
   }
 
   const templateData = JSON.stringify({
-    name,
-    url,
+    ...emailParams,
   });
 
   const params = {

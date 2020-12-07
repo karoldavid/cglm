@@ -8,18 +8,20 @@ import { sendSignupEmail } from '../../ses/signupEmail';
 
 const logger = createLogger('sendSignupEmail');
 
+const SES_SENDER_EMAIL = process.env.sesSenderEmai;
+
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const { name, recipient, url }: SendSignupEmailRequest = JSON.parse(
+    const { name, recipient, url, qrcode }: SendSignupEmailRequest = JSON.parse(
       event.body
     );
     try {
-      const response = await sendSignupEmail(
-        recipient,
-        process.env.sesSenderEmail,
+      const response = await sendSignupEmail(recipient, SES_SENDER_EMAIL, {
         name,
-        url
-      );
+        recipient,
+        url,
+        qrcode,
+      });
       logger.info('Sent signup email.', response);
       return {
         statusCode: 200,
