@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "SignupEmailTemplate",
+    "SubjectPart": "Please Register Your Attendance",
+    "HtmlPart": "<h1>Dear {{name}},</h1><p>Please register your attendance using the following Link: {{url}}</p><p>Best regards,</p><p>Your Attendee Team.</p>",
+    "TextPart": "Dear {{name}},\r\nPlease register your attendance using the following Link: {{url}}\r\nBest regards,\r\nYour Attendee Team.</p>"
+  }
+}

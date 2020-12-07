@@ -208,6 +208,14 @@ functions:
       - stream:
           type: dynamodb
           arn: !GetAtt AttendeesDynamoDBTable.StreamArn
+  SendAttendeeSignupEmail:
+    handler: apps/attendance/src/app/lambda/http/sendSignupEmail.handler
+    events:
+      - http:
+          method: post
+          path: sendSignupEmail
+          cors: true
+          authorizer: Auth
 
 resources:
   Resources:
