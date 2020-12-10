@@ -5,6 +5,7 @@ service:
   name: serverless-attendance-app
 
 plugins:
+  - serverless-dotenv-plugin
   - serverless-webpack
   #  - serverless-iam-roles-per-function
   - serverless-offline
@@ -74,6 +75,12 @@ provider:
       Resource: ['*']
 
 custom:
+  dotenv:
+    path: apps/attendance/.env.local
+    required:
+      file: true
+    include:
+      - sesSenderEmail
   serverless-offline:
     httpPort: 3003
     allowCache: true

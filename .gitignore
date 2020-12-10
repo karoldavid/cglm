@@ -42,6 +42,7 @@ Thumbs.db
 # Files containing environment variables 
 .env
 .local.env
+.env.local
 
 # other
 .webpack

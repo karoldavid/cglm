@@ -92,6 +92,7 @@
     "jest": "26.2.2",
     "prettier": "2.0.4",
     "serverless": "^2.8.0",
+    "serverless-dotenv-plugin": "^3.1.0",
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-offline": "^6.8.0",
