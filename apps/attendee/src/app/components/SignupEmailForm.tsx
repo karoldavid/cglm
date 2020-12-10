@@ -30,8 +30,9 @@ export const SignupEmailForm: React.FunctionComponent<SignupEmailFormProps> = ({
 
   const { register, handleSubmit } = useForm<SignupFormFields>();
 
-  const onSubmit = async (data: SendSignupEmailRequest) => {
-    const signupEmail = { ...data, qrcode, name: 'Attendee', url };
+  const onSubmit = async (data: SignupFormFields) => {
+    const { email: recipient } = data;
+    const signupEmail = { recipient, qrcode, name: 'Attendee', url };
     try {
       await mutate({ signupEmail });
       history.push(`/events/${id}/qrcodes`);
