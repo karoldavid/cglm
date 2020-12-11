@@ -3,7 +3,8 @@ import { Grid, Header, Segment, Container } from 'semantic-ui-react';
 
 import Auth from './auth/Auth';
 import { AppMenu } from './components/AppMenu';
-import { Content } from './Content';
+import { Main } from './content/Main';
+import { HeaderMenu } from './content/HeaderMenu'
 
 export interface AppProps {
   auth: Auth;
@@ -27,13 +28,13 @@ export const App: React.FunctionComponent<AppProps> = ({ auth }) => {
 
           <Grid.Row>
             <Grid.Column width={16}>
-              <AppMenu auth={auth} />
+              <HeaderMenu auth={auth} />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column width={16}>
-              <Content auth={auth} />
+              <Main auth={auth} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

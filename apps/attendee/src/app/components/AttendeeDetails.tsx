@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
-import { Header, Card, Loader, Segment, Button } from 'semantic-ui-react';
+import { Header, Segment, Button } from 'semantic-ui-react';
 
 import { useAttendee } from '../api/attendees';
 import Auth from '../auth/Auth';
