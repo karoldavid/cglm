@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams, NavLink } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Button, Form, Segment, Header } from 'semantic-ui-react';
 
 import { useCreateAttendeePublic } from '../api/attendees';
@@ -18,7 +18,7 @@ export const PublicSignupForm: React.FunctionComponent<PublicSignupFormProps> = 
 
   const [mutate, { isLoading }] = useCreateAttendeePublic();
 
-  const { register, handleSubmit } = useForm<PublicSignupFormFields>();
+  const { register, handleSubmit, reset } = useForm<PublicSignupFormFields>();
 
   const onSubmit = async (data: CreateAttendeePublicRequest) => {
     try {
@@ -30,7 +30,7 @@ export const PublicSignupForm: React.FunctionComponent<PublicSignupFormProps> = 
 
   return (
     <Segment loading={isLoading}>
-      <Header size="medium">Signup</Header>
+      <Header size="medium">Signup for Event</Header>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field>
           <input
@@ -50,11 +50,11 @@ export const PublicSignupForm: React.FunctionComponent<PublicSignupFormProps> = 
           />
         </Form.Field>
         <Button.Group>
-          <Button basic color="grey" size="medium" as={NavLink} to="/">
-            Cancel
+          <Button basic color="grey" size="medium" onClick={() => reset()}>
+            Reset
           </Button>
           <Button basic color="blue" size="medium" type="submit">
-            Save
+            Send
           </Button>
         </Button.Group>
       </Form>
