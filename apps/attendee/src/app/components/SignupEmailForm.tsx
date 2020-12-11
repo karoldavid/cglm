@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useHistory, useParams, NavLink } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Button, Form, Segment, Header } from 'semantic-ui-react';
 
 import { useSendSignupEmail } from '../api/emails';
-import { SendSignupEmailRequest } from '../types/SendSignupEmailRequest';
 import Auth from '../auth/Auth';
 
 interface SignupEmailFormProps {
@@ -13,9 +12,9 @@ interface SignupEmailFormProps {
   qrcode: string;
 }
 
-type SignupFormFields = {
+interface SignupFormFields {
   email: string;
-};
+}
 
 export const SignupEmailForm: React.FunctionComponent<SignupEmailFormProps> = ({
   auth,

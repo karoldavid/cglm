@@ -57,3 +57,15 @@ export function useCreateAttendee(idToken: string) {
     }).then((res) => res.json())
   );
 }
+
+export function useCreateAttendeePublic() {
+  return useMutation(({ eventId, newAttendee }: CreateAttendeeVariables) =>
+    fetch(`${apiEndpoint}/public/events/${eventId}/attendees/new`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newAttendee),
+    }).then((res) => res.json())
+  );
+}
