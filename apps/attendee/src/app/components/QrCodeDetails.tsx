@@ -55,7 +55,15 @@ export const QrCodeDetails: React.FunctionComponent<QrCodeDetailsProps> = ({
                     </span>
                   </Card.Meta>
                   <Card.Description>
-                    Scan QR-Code to go to Event Attendee Form.
+                    <p>Scan QR-Code to go to Attendee Signup Form.</p>
+                    Link:{' '}
+                    {isLoading || isError ? (
+                      ''
+                    ) : (
+                      <a href={data.item.shortUrl} target={'_blank'}>
+                        {data.item.shortUrl}
+                      </a>
+                    )}
                   </Card.Description>
                 </Card.Content>
               </Card>

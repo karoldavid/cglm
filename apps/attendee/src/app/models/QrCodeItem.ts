@@ -4,6 +4,6 @@ export interface QrCodeItem {
   qrCodeId: string;
   timestamp: string;
   base64: string;
-  url: string;
+  shortUrl: string;
   expiration: number;
 }
