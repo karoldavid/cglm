@@ -32,7 +32,12 @@ export async function getQrCode(
 ): Promise<QrCodeItem> {
   const { qrCodeId } = event.pathParameters;
 
-  logger.info('Getting attendee for an event.');
+  logger.info('Getting QR-Code by path parameters.');
+
+  return qrCodeAccess.getQrCode(qrCodeId);
+}
+export async function getQrCodeById(qrCodeId: string): Promise<QrCodeItem> {
+  logger.info('Getting QR-Code by id.');
 
   return qrCodeAccess.getQrCode(qrCodeId);
 }
@@ -59,4 +64,14 @@ export async function createQrCode(
     timestamp: new Date().toISOString(),
     expiration: 3600000,
   });
+}
+
+export async function qrCodeIsValid(
+  event: APIGatewayProxyEvent
+): Promise<boolean> {
+  const { qrCodeId } = event.queryStringParameters;
+
+  logger.info('Checking if QR-Code exists and is valid.', qrCodeId);
+
+  return qrCodeAccess.qrCodeIsValid(qrCodeId);
 }

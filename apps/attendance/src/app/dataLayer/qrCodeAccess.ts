@@ -57,7 +57,7 @@ export class QrCodeAccess {
   }
 
   async getQrCodeForEvent(qrCodeId: string): Promise<any> {
-    logger.info('Getting a qr code for an event.');
+    logger.info('Getting a qr code for an event.', qrCodeId);
 
     const result = await this.docClient
       .query({
@@ -70,6 +70,25 @@ export class QrCodeAccess {
       })
       .promise();
 
+    logger.info(result);
+
     return result.Items[0];
+  }
+
+  async qrCodeIsValid(qrCodeId: string): Promise<boolean> {
+    logger.info('Checking if QR-Code exists and is valid.');
+    const result = await this.docClient
+      .query({
+        TableName: this.qrCodesTable,
+        IndexName: this.qrCodeIdIndex,
+        KeyConditionExpression: 'qrCodeId = :qrCodeId',
+        ExpressionAttributeValues: {
+          ':qrCodeId': qrCodeId,
+        },
+      })
+      .promise();
+
+    logger.info(result.Count);
+    return result.Count > 0;
   }
 }

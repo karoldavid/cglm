@@ -33,16 +33,16 @@ export async function getAttendee(
 
 export async function createAttendee(
   createAttendeeRequest: CreateAttendeeRequest,
-  event: APIGatewayProxyEvent
+  event: APIGatewayProxyEvent,
+  userId?: string
 ): Promise<AttendeeItem> {
-  const userId = getUserId(event);
   const eventId = event.pathParameters.eventId;
   const attendeeId = uuid.v4();
 
   logger.info('Creating attendee for event', eventId);
 
   return await attendeeAccess.createAttendee({
-    userId: userId,
+    userId: userId || getUserId(event),
     eventId: eventId,
     attendeeId: attendeeId,
     timestamp: new Date().toISOString(),
