@@ -49,7 +49,7 @@ export async function createQrCode(
   const eventId = event.pathParameters.eventId;
   const qrCodeId = uuid.v4();
 
-  const url = `${PUBLIC_URL}/public/events/${eventId}/attendees/new?qrCodeId=${qrCodeId}`;
+  const url = `${PUBLIC_URL}/guest/events/${eventId}/attendees?qrCodeId=${qrCodeId}`;
 
   const shortUrl = await TinyUrl.shorten(url);
 

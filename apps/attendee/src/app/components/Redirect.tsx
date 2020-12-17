@@ -8,7 +8,7 @@ export const Redirect: React.FunctionComponent<RedirectProps> = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname !== '/') {
+    if (pathname !== '/guest') {
       history.push('/');
     }
   }, []);

@@ -1,6 +1,14 @@
 import auth0 from 'auth0-js';
 import { authConfig } from '../../config';
 
+const parseJwt = (token) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+};
+
 export default class Auth {
   accessToken;
   idToken;
@@ -27,7 +35,14 @@ export default class Auth {
   }
 
   login() {
-    this.auth0.authorize();
+    const options = this.history.location.pathname.startsWith('/guest')
+      ? {
+          userRole: 'guest',
+          guestRedirectUri: `${this.history.location.pathname}${this.history.location.search}`,
+        }
+      : {};
+
+    this.auth0.authorize(options);
   }
 
   handleAuthentication() {
@@ -35,6 +50,7 @@ export default class Auth {
       if (authResult && authResult.accessToken && authResult.idToken) {
         console.log('Access token: ', authResult.accessToken);
         console.log('id token: ', authResult.idToken);
+        console.log('authResult', authResult);
         this.setSession(authResult);
       } else if (err) {
         this.history.replace('/');
@@ -64,8 +80,15 @@ export default class Auth {
 
     console.log('expiresAt', this.expiresAt);
 
-    // navigate to the home route
-    this.history.replace('/');
+    if (
+      authResult.idTokenPayload['https://attendee.com/roles'][0] === 'guest'
+    ) {
+      this.history.replace(
+        authResult.idTokenPayload['https://attendee.com/redirect_uri']
+      );
+    } else {
+      this.history.replace('/');
+    }
   }
 
   renewSession() {

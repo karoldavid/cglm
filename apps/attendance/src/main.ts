@@ -2,8 +2,6 @@ const localtunnel = require('localtunnel');
 
 import { localtunnelConfig } from './config';
 
-console.log('process.env', process.env.TUNNEL_URL);
-
 (async () => {
   const tunnel = await localtunnel({
     port: localtunnelConfig.port,
@@ -12,6 +10,7 @@ console.log('process.env', process.env.TUNNEL_URL);
   });
 
   console.log('tunnel url:', tunnel.url);
+  console.lo
 
   tunnel.on('close', () => {
     console.log('tunnel closed: ', tunnel.url);

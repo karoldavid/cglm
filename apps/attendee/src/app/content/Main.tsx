@@ -33,7 +33,7 @@ export const Main: React.FunctionComponent<MainProps> = ({ auth }) => {
         component={EventDetails}
       />
       <Route
-        path={`/public/events/:id/attendees/new`}
+        path={`/guest/events/:id/attendees`}
         exact
         component={PublicSignupForm}
       />
