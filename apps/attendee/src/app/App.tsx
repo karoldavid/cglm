@@ -2,7 +2,6 @@ import React from 'react';
 import { Grid, Header, Segment, Container } from 'semantic-ui-react';
 
 import Auth from './auth/Auth';
-import { AppMenu } from './components/AppMenu';
 import { Main } from './content/Main';
 import { HeaderMenu } from './content/HeaderMenu'
 

@@ -128,4 +128,16 @@ export default class Auth {
     let expiresAt = this.expiresAt;
     return new Date().getTime() < expiresAt;
   }
+
+  isAdmin() {
+    authResult.idTokenPayload['https://attendee.com/roles'][0] === 'admin';
+  }
+
+  isUser() {
+    authResult.idTokenPayload['https://attendee.com/roles'][0] === 'user';
+  }
+
+  isGuest() {
+    authResult.idTokenPayload['https://attendee.com/roles'][0] === 'guest';
+  }
 }

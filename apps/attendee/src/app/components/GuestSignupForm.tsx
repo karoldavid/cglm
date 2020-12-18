@@ -3,26 +3,37 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { Button, Form, Segment, Header } from 'semantic-ui-react';
 
-import { useCreateAttendeePublic } from '../api/attendees';
-import { CreateAttendeePublicRequest } from '../types/CreateAttendeePublicRequest';
+import { useCreateAttendeeGuest } from '../api/attendees';
+import { CreateAttendeeGuestRequest } from '../types/CreateAttendeeGuestRequest';
+import Auth from '../auth/Auth';
 
-interface PublicSignupFormProps {}
+interface GuestSignupFormProps {
+  auth: Auth;
+}
 
-interface PublicSignupFormFields {
+interface GuestSignupFormFields {
   name: string;
   email: string;
 }
 
-export const PublicSignupForm: React.FunctionComponent<PublicSignupFormProps> = () => {
+export const GuestSignupForm: React.FunctionComponent<GuestSignupFormProps> = ({
+  auth,
+}) => {
   const { id } = useParams();
 
-  const [mutate, { isLoading }] = useCreateAttendeePublic();
+  const qrCodeId = new URLSearchParams(window.location.search).get('qrCodeId');
 
-  const { register, handleSubmit, reset } = useForm<PublicSignupFormFields>();
+  const [mutate, { isLoading }] = useCreateAttendeeGuest(auth.getIdToken());
 
-  const onSubmit = async (data: CreateAttendeePublicRequest) => {
+  const { register, handleSubmit, reset } = useForm<GuestSignupFormFields>();
+
+  const onSubmit = async (data: CreateAttendeeGuestRequest) => {
     try {
-      await mutate({ eventId: id, newAttendee: data });
+      await mutate({
+        eventId: id,
+        newAttendee: data,
+        params: { qrCodeId },
+      });
     } catch (e) {
       alert(e.message);
     }

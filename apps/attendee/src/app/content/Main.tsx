@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import Auth from '../auth/Auth';
 
 import { NotFound } from '../components/NotFound';
-import { PublicSignupForm } from '../components/PublicSignupForm';
+import { GuestSignupForm } from '../components/GuestSignupForm';
 import { Now } from '../components/Now';
 import { Events } from '../components/Events';
 import { EventDetails } from '../components/EventDetails';
@@ -32,10 +32,11 @@ export const Main: React.FunctionComponent<MainProps> = ({ auth }) => {
         exact={false}
         component={EventDetails}
       />
-      <Route
+      <ProtectedRoute
+        auth={auth}
         path={`/guest/events/:id/attendees`}
         exact
-        component={PublicSignupForm}
+        component={GuestSignupForm}
       />
       <Route component={NotFound} />
     </Switch>

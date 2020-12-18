@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from 'react-query';
 
+import { getQueryStringParams } from '@cglm/common-util'
 import { apiEndpoint } from '../../config';
 import { CreateAttendeeRequest } from '../types/CreateAttendeeRequest';
 import { AttendeeItem } from '../models/AttendeeItem';
@@ -12,9 +13,14 @@ interface AttendeeData {
   item: AttendeeItem;
 }
 
+interface AttendeeGuestParams {
+  qrCodeId: string;
+}
+
 interface CreateAttendeeVariables {
   eventId: string;
   newAttendee: CreateAttendeeRequest;
+  params: AttendeeGuestParams;
 }
 
 export function useAttendees(idToken: string, eventId: string) {
@@ -58,14 +64,21 @@ export function useCreateAttendee(idToken: string) {
   );
 }
 
-export function useCreateAttendeePublic() {
-  return useMutation(({ eventId, newAttendee }: CreateAttendeeVariables) =>
-    fetch(`${apiEndpoint}/public/events/${eventId}/attendees/new`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newAttendee),
-    }).then((res) => res.json())
+export function useCreateAttendeeGuest(idToken: string) {
+  return useMutation(
+    ({ eventId, newAttendee, params }: CreateAttendeeVariables) =>
+      fetch(
+        `${apiEndpoint}/events/${eventId}/attendees${getQueryStringParams(
+          params
+        )}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify(newAttendee),
+        }
+      ).then((res) => res.json())
   );
 }
