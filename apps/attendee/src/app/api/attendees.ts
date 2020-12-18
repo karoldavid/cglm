@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from 'react-query';
 
-import { getQueryStringParams } from '@cglm/common-util'
+import { getQueryStringParams } from '@cglm/common-util';
 import { apiEndpoint } from '../../config';
 import { CreateAttendeeRequest } from '../types/CreateAttendeeRequest';
 import { AttendeeItem } from '../models/AttendeeItem';
@@ -18,6 +18,11 @@ interface AttendeeGuestParams {
 }
 
 interface CreateAttendeeVariables {
+  eventId: string;
+  newAttendee: CreateAttendeeRequest;
+}
+
+interface CreateAttendeeGuestVariables {
   eventId: string;
   newAttendee: CreateAttendeeRequest;
   params: AttendeeGuestParams;
@@ -66,7 +71,7 @@ export function useCreateAttendee(idToken: string) {
 
 export function useCreateAttendeeGuest(idToken: string) {
   return useMutation(
-    ({ eventId, newAttendee, params }: CreateAttendeeVariables) =>
+    ({ eventId, newAttendee, params }: CreateAttendeeGuestVariables) =>
       fetch(
         `${apiEndpoint}/events/${eventId}/attendees${getQueryStringParams(
           params
@@ -79,6 +84,9 @@ export function useCreateAttendeeGuest(idToken: string) {
           },
           body: JSON.stringify(newAttendee),
         }
-      ).then((res) => res.json())
+      ).then((res) => {
+        if (!res.ok) throw new Error(res.statusText);
+        return res.json();
+      })
   );
 }

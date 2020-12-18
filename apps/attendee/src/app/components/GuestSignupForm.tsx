@@ -1,7 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { Button, Form, Segment, Header } from 'semantic-ui-react';
+import { useTranslation } from 'react-i18next';
+import { Button, Form, Segment, Header, Message } from 'semantic-ui-react';
 
 import { useCreateAttendeeGuest } from '../api/attendees';
 import { CreateAttendeeGuestRequest } from '../types/CreateAttendeeGuestRequest';
@@ -19,29 +20,42 @@ interface GuestSignupFormFields {
 export const GuestSignupForm: React.FunctionComponent<GuestSignupFormProps> = ({
   auth,
 }) => {
+  const { t } = useTranslation();
   const { id } = useParams();
 
   const qrCodeId = new URLSearchParams(window.location.search).get('qrCodeId');
 
-  const [mutate, { isLoading }] = useCreateAttendeeGuest(auth.getIdToken());
+  const [mutate, { isLoading, isError, isSuccess }] = useCreateAttendeeGuest(
+    auth.getIdToken()
+  );
 
   const { register, handleSubmit, reset } = useForm<GuestSignupFormFields>();
 
   const onSubmit = async (data: CreateAttendeeGuestRequest) => {
-    try {
-      await mutate({
-        eventId: id,
-        newAttendee: data,
-        params: { qrCodeId },
-      });
-    } catch (e) {
-      alert(e.message);
-    }
+    await mutate({
+      eventId: id,
+      newAttendee: data,
+      params: { qrCodeId },
+    });
   };
 
-  return (
-    <Segment loading={isLoading}>
-      <Header size="medium">Signup for Event</Header>
+  const content = () => {
+    if (isError) {
+      return (
+        <Message>
+          <p>{t('eventSignupError')}</p>
+        </Message>
+      );
+    }
+    if (isSuccess) {
+      return (
+        <Message>
+          <p>{t('eventSignupSuccess')}</p>
+        </Message>
+      );
+    }
+
+    return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Field>
           <input
@@ -69,6 +83,13 @@ export const GuestSignupForm: React.FunctionComponent<GuestSignupFormProps> = ({
           </Button>
         </Button.Group>
       </Form>
+    );
+  };
+
+  return (
+    <Segment loading={isLoading}>
+      <Header size="medium">Signup for Event</Header>
+      {content()}
     </Segment>
   );
 };

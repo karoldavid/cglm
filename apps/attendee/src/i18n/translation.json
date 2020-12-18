@@ -2,7 +2,9 @@
   "en": {
     "translation": {
       "title": "Attendee",
-      "subTitle": "Contactless Guest List Manager"
+      "subTitle": "Contactless Guest List Manager",
+      "eventSignupSuccess": "Signup successfull. Please check your email inbox.",
+      "eventSignupError": "Something went wrong. Please contact the organizer."
     }
   }
 }
