@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Auth from './auth/Auth';
 import { Router, Route } from 'react-router-dom';
 import { Callback } from '@cglm/ui';
 import { createBrowserHistory as createHistory } from 'history';
 import { App } from './App';
+
 const history = createHistory();
 
 const auth = new Auth(history);
@@ -27,7 +28,11 @@ export const makeAuthRouting = () => {
       />
       <Route
         render={(props) => {
-          return <App {...props} auth={auth} />;
+          return (
+            <Suspense fallback="loading">
+              <App {...props} auth={auth} />
+            </Suspense>
+          );
         }}
       />
     </Router>
