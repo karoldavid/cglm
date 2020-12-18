@@ -45,8 +45,13 @@ export const EventDetails: React.FunctionComponent<EventDetailsProps> = ({
     auth.getIdToken()
   );
 
-  const createQrCode = () => {
-    mutate({ eventId: id });
+  const createQrCode = async () => {
+    try {
+      await mutate({ eventId: id });
+      history.push(`/events/${id}/qrcodes`);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const navigateToNewAttendee = () => {
