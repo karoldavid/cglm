@@ -1,18 +1,18 @@
-import auth0 from 'auth0-js';
+import auth0, { AuthorizeOptions } from 'auth0-js';
 import { authConfig } from '../../config';
 
-const parseJwt = (token) => {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
-    return null;
-  }
-};
+// enum UserType {
+//   USER = 'user',
+//   GUEST = 'guest',
+//   ADMIN = 'admin',
+// }
 
 export default class Auth {
   accessToken;
   idToken;
   expiresAt;
+  userRole;
+  history;
 
   auth0 = new auth0.WebAuth({
     domain: authConfig.domain,
@@ -35,14 +35,14 @@ export default class Auth {
   }
 
   login() {
-    const options = this.history.location.pathname.startsWith('/guest')
-      ? {
-          userRole: 'guest',
-          guestRedirectUri: `${this.history.location.pathname}${this.history.location.search}`,
-        }
-      : {};
-
-    this.auth0.authorize(options);
+    if (this.history.location.pathname.startsWith('/guest')) {
+      this.auth0.authorize({
+        userRole: 'guest',
+        guestRedirectUri: `${this.history.location.pathname}${this.history.location.search}`,
+      });
+    } else {
+      this.auth0.authorize();
+    }
   }
 
   handleAuthentication() {
@@ -77,12 +77,11 @@ export default class Auth {
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
+    this.userRole = authResult.idTokenPayload['https://attendee.com/roles'][0];
 
     console.log('expiresAt', this.expiresAt);
 
-    if (
-      authResult.idTokenPayload['https://attendee.com/roles'][0] === 'guest'
-    ) {
+    if (this.userRole === 'guest') {
       this.history.replace(
         authResult.idTokenPayload['https://attendee.com/redirect_uri']
       );
@@ -130,14 +129,14 @@ export default class Auth {
   }
 
   isAdmin() {
-    authResult.idTokenPayload['https://attendee.com/roles'][0] === 'admin';
+    return this.userRole === 'admin'; // UserType.ADMIN;
   }
 
   isUser() {
-    authResult.idTokenPayload['https://attendee.com/roles'][0] === 'user';
+    return this.userRole === 'user'; //  UserType.USER;
   }
 
   isGuest() {
-    authResult.idTokenPayload['https://attendee.com/roles'][0] === 'guest';
+    return this.userRole === 'guest'; // UserType.GUEST;
   }
 }

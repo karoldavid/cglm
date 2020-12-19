@@ -4,17 +4,17 @@ import { Route, RouteComponentProps, RouteProps } from 'react-router-dom';
 import Auth from '../auth/Auth';
 import { Redirect } from './Redirect';
 
-interface ProtectedRouteProps extends RouteProps {
+interface ProtectedGuestRouteProps extends RouteProps {
   auth: Auth;
   exact?: boolean;
   path: string;
 }
 
-interface ProtectedRouteComponentProps extends RouteComponentProps {
+interface ProtectedGuestRouteComponentProps extends RouteComponentProps {
   auth: Auth;
 }
 
-export const ProtectedRoute: React.FunctionComponent<ProtectedRouteProps> = ({
+export const ProtectedGuestRoute: React.FunctionComponent<ProtectedGuestRouteProps> = ({
   auth,
   component: Component,
   exact,
@@ -28,8 +28,8 @@ export const ProtectedRoute: React.FunctionComponent<ProtectedRouteProps> = ({
   return (
     <Route
       {...otherProps}
-      render={(props: ProtectedRouteComponentProps) =>
-        auth.isAuthenticated() && (auth.isAdmin() || auth.isUser()) ? (
+      render={(props: ProtectedGuestRouteComponentProps) =>
+        auth.isAuthenticated() ? (
           <Component auth={auth} {...props} />
         ) : (
           <Redirect />
