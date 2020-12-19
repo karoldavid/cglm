@@ -4,7 +4,9 @@
       "title": "Attendee",
       "subTitle": "Contactless Guest List Manager",
       "eventSignupSuccess": "Signup successfull. Please check your email inbox.",
-      "eventSignupError": "Something went wrong. Please contact the organizer."
+      "eventSignupError": "Something went wrong. Please contact the organizer.",
+      "loggedInAsGuest": "You are logged in as guest.",
+      "loginAsGuest": "Please login as guest."
     }
   }
 }

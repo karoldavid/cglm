@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Button } from 'semantic-ui-react';
+import { useTranslation } from 'react-i18next';
+import { Menu, Button, Message } from 'semantic-ui-react';
 
 import Auth from '../auth/Auth';
 
@@ -9,6 +10,7 @@ export interface AppMenuProps {
 }
 
 export const AppMenu: React.FunctionComponent<AppMenuProps> = ({ auth }) => {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
   const isAuthenticated = auth.isAuthenticated();
 
@@ -42,15 +44,27 @@ export const AppMenu: React.FunctionComponent<AppMenuProps> = ({ auth }) => {
 
   return (
     <Menu>
-      <Menu.Item name="now" active={isAuthenticated && pathname === '/'}>
-        {isAuthenticated ? <Link to="/">Now</Link> : 'Now'}
-      </Menu.Item>
-      <Menu.Item
-        name="events"
-        active={isAuthenticated && pathname.startsWith('/events')}
-      >
-        {isAuthenticated ? <Link to="/events">Events</Link> : 'Events'}
-      </Menu.Item>
+      {!pathname.startsWith('/guest') ? (
+        <>
+          <Menu.Item name="now" active={isAuthenticated && pathname === '/'}>
+            {isAuthenticated ? <Link to="/">Now</Link> : 'Now'}
+          </Menu.Item>
+          <Menu.Item
+            name="events"
+            active={isAuthenticated && pathname.startsWith('/events')}
+          >
+            {isAuthenticated ? <Link to="/events">Events</Link> : 'Events'}
+          </Menu.Item>
+        </>
+      ) : (
+        <Menu.Item>
+          {isAuthenticated ? (
+            <Message>{t('loggedInAsGuest')}</Message>
+          ) : (
+            <Message>{t('loginAsGuest')}</Message>
+          )}
+        </Menu.Item>
+      )}
       <Menu.Menu position="right">{logInLogOutButton()}</Menu.Menu>
     </Menu>
   );
