@@ -13,6 +13,8 @@ export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     let userId;
 
+    logger.info(event);
+
     if (event.queryStringParameters && event.queryStringParameters.qrCodeId) {
       const isValid = await qrCodeIsValid(event);
 

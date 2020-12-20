@@ -88,7 +88,9 @@ export class QrCodeAccess {
       })
       .promise();
 
-    logger.info(result.Count);
-    return result.Count > 0;
+    return (
+      result.Count === 1 &&
+      result.Items[0].expiration > Math.round(new Date().getTime() / 1000)
+    );
   }
 }

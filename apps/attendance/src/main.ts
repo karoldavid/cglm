@@ -10,7 +10,6 @@ import { localtunnelConfig } from './config';
   });
 
   console.log('tunnel url:', tunnel.url);
-  console.lo
 
   tunnel.on('close', () => {
     console.log('tunnel closed: ', tunnel.url);

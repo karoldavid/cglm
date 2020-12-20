@@ -13,14 +13,14 @@ export const QrCodesList: React.FunctionComponent<QrCodesListProps> = ({
   const match = useRouteMatch();
 
   const renderListItem = (qrCode: QrCodeItem) => {
-    return (
+    return qrCode.expiration > Math.round(new Date().getTime() / 1000) ? (
       <List.Item key={qrCode.qrCodeId}>
         <List.Content floated="right">
           <NavLink to={`${match.url}/${qrCode.qrCodeId}`}>show</NavLink>
         </List.Content>
         <List.Content>{qrCode.timestamp}</List.Content>
       </List.Item>
-    );
+    ) : null;
   };
 
   const renderListItems = (qrCodes: QrCodeItem[]) =>

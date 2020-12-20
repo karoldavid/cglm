@@ -62,7 +62,7 @@ export async function createQrCode(
     base64: base64,
     shortUrl: shortUrl,
     timestamp: new Date().toISOString(),
-    expiration: 3600000,
+    expiration: Math.round(new Date().getTime() / 1000) + 360,
   });
 }
 
