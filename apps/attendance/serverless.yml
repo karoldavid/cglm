@@ -50,11 +50,13 @@ custom:
     stages:
       - ${opt:stage, self:provider.stage}
   documentation:
-    
     models:
       - name: CreateEventRequest
         contentType: application/json
         schema: ${file(apps/attendance/models/create-event-request.json)}
+      - name: CreateAttendeeRequest
+        contentType: application/json
+        schema: ${file(apps/attendance/models/create-attendee-request.json)}
 
 functions:
   Auth:
@@ -175,6 +177,12 @@ functions:
           path: events/{eventId}/attendees
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new attendee
+            description: Create a new attendee
+            requestModels:
+              'application/json': CreateAttendeeRequest
 
   GetQrCodes:
     handler: apps/attendance/src/app/lambda/http/getQrCodes.handler
