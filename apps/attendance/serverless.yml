@@ -8,6 +8,8 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-webpack
   - serverless-iam-roles-per-function
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
   - serverless-offline
   - serverless-dynamodb-local
 
@@ -47,6 +49,12 @@ custom:
       migrate: true
     stages:
       - ${opt:stage, self:provider.stage}
+  documentation:
+    
+    models:
+      - name: CreateEventRequest
+        contentType: application/json
+        schema: ${file(apps/attendance/models/create-event-request.json)}
 
 functions:
   Auth:
@@ -107,6 +115,12 @@ functions:
           path: events
           cors: true
           authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new event
+            description: Create a new event
+            requestModels:
+              'application/json': CreateEventRequest
 
   GetAttendees:
     handler: apps/attendance/src/app/lambda/http/getAttendees.handler
@@ -341,3 +355,12 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
+
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: 'request-body-validator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false

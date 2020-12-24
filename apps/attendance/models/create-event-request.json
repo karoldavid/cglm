@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CreateEventRequest",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+$",
+      "minLength": 5,
+      "maxLength": 20
+    },
+    "eventDate": {
+      "type": "string",
+      "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}"
+    }
+  },
+  "required": ["name", "eventDate"],
+  "additionalProperties": true
+}
