@@ -28,6 +28,7 @@
   "private": true,
   "dependencies": {
     "aws-lambda": "^1.0.6",
+    "aws-xray-sdk": "^3.2.0",
     "axios": "^0.20.0",
     "document-register-element": "1.13.1",
     "i18next": "^19.8.4",

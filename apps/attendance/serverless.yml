@@ -28,6 +28,10 @@ provider:
     ATTENDEE_ID_INDEX: AttendeeIdIndex
     QR_CODE_ID_INDEX: QrCodeIdIndex
 
+  tracing:
+    lambda: true
+    apiGateway: true
+
 custom:
   dotenv:
     path: apps/attendance/.env.local
