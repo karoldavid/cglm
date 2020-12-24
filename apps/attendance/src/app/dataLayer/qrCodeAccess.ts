@@ -57,7 +57,7 @@ export class QrCodeAccess {
   }
 
   async getQrCodeForEvent(qrCodeId: string): Promise<any> {
-    logger.info('Getting a qr code for an event.', qrCodeId);
+    logger.info('Getting a QR-Code for an Event.');
 
     const result = await this.docClient
       .query({

@@ -32,7 +32,7 @@ export async function getQrCode(
 ): Promise<QrCodeItem> {
   const { qrCodeId } = event.pathParameters;
 
-  logger.info('Getting QR-Code by path parameters.');
+  logger.info('Getting QR-Code.');
 
   return qrCodeAccess.getQrCode(qrCodeId);
 }

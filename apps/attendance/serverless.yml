@@ -7,7 +7,7 @@ service:
 plugins:
   - serverless-dotenv-plugin
   - serverless-webpack
-  #  - serverless-iam-roles-per-function
+  - serverless-iam-roles-per-function
   - serverless-offline
   - serverless-dynamodb-local
 
@@ -25,55 +25,6 @@ provider:
     INDEX_NAME: UserIdIndex
     ATTENDEE_ID_INDEX: AttendeeIdIndex
     QR_CODE_ID_INDEX: QrCodeIdIndex
-
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:GetItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:GetItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}/index/${self:provider.environment.INDEX_NAME}
-    - Effect: Allow
-      Action:
-        - dynamodb:PutItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
-
-    - Effect: Allow
-      Action:
-        - dynamodb:PutItem
-        - dynamodb:Query
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ATTENDEES_TABLE}
-
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:GetItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ATTENDEES_TABLE}/index/${self:provider.environment.ATTENDEE_ID_INDEX}
-
-    - Effect: Allow
-      Action:
-        - dynamodb:PutItem
-        - dynamodb:Query
-        - dynamodb:UpdateItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QR_CODES_TABLE}
-
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:GetItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QR_CODES_TABLE}/index/${self:provider.environment.QR_CODE_ID_INDEX}
-
-    - Effect: Allow
-      Action:
-        - ses:GetTemplate
-        - ses:CreateTemplate
-        - ses:UpdateTemplate
-        - ses:SendTemplatedEmail
-      Resource: ['*']
 
 custom:
   dotenv:
@@ -105,17 +56,17 @@ functions:
 
   GetEvents:
     handler: apps/attendance/src/app/lambda/http/getEvents.handler
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #       - dynamodb:Query
-    #       - dynamodb:GetItem
-    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
-    #   - Effect: Allow
-    #     Action:
-    #       - dynamodb:Query
-    #       - dynamodb:GetItem
-    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}/index/${self:provider.environment.INDEX_NAME}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}/index/${self:provider.environment.INDEX_NAME}
     events:
       - http:
           method: get
@@ -125,17 +76,17 @@ functions:
 
   GetEvent:
     handler: apps/attendance/src/app/lambda/http/getEvent.handler
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #       - dynamodb:Query
-    #       - dynamodb:GetItem
-    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
-    #   - Effect: Allow
-    #     Action:
-    #       - dynamodb:Query
-    #       - dynamodb:GetItem
-    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}/index/${self:provider.environment.INDEX_NAME}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}/index/${self:provider.environment.INDEX_NAME}
     events:
       - http:
           method: get
@@ -145,11 +96,11 @@ functions:
 
   CreateEvent:
     handler: apps/attendance/src/app/lambda/http/createEvent.handler
-    # iamRoleStatements:
-    #   - Effect: Allow
-    #     Action:
-    #       - dynamodb:PutItem
-    #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
     events:
       - http:
           method: post
@@ -159,6 +110,17 @@ functions:
 
   GetAttendees:
     handler: apps/attendance/src/app/lambda/http/getAttendees.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ATTENDEES_TABLE}
     events:
       - http:
           method: get
@@ -168,6 +130,17 @@ functions:
 
   GetAttendee:
     handler: apps/attendance/src/app/lambda/http/getAttendee.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ATTENDEES_TABLE}/index/${self:provider.environment.ATTENDEE_ID_INDEX}
     events:
       - http:
           method: get
@@ -177,6 +150,11 @@ functions:
 
   CreateAttendee:
     handler: apps/attendance/src/app/lambda/http/createAttendee.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ATTENDEES_TABLE}
     events:
       - http:
           method: post
@@ -186,6 +164,17 @@ functions:
 
   GetQrCodes:
     handler: apps/attendance/src/app/lambda/http/getQrCodes.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QR_CODES_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
     events:
       - http:
           method: get
@@ -195,6 +184,12 @@ functions:
 
   GetQrCode:
     handler: apps/attendance/src/app/lambda/http/getQrCode.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QR_CODES_TABLE}/index/${self:provider.environment.QR_CODE_ID_INDEX}
     events:
       - http:
           method: get
@@ -204,6 +199,11 @@ functions:
 
   CreateQrCode:
     handler: apps/attendance/src/app/lambda/http/createQrCode.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.QR_CODES_TABLE}
     events:
       - http:
           method: post
@@ -213,12 +213,28 @@ functions:
 
   OnAttendeeSignup:
     handler: apps/attendance/src/app/lambda/dynamodb/onAttendeeSignup.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - ses:GetTemplate
+          - ses:CreateTemplate
+          - ses:UpdateTemplate
+          - ses:SendTemplatedEmail
+        Resource: ['*']
     events:
       - stream:
           type: dynamodb
           arn: !GetAtt AttendeesDynamoDBTable.StreamArn
   SendAttendeeSignupEmail:
     handler: apps/attendance/src/app/lambda/http/sendSignupEmail.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - ses:GetTemplate
+          - ses:CreateTemplate
+          - ses:UpdateTemplate
+          - ses:SendTemplatedEmail
+        Resource: ['*']
     events:
       - http:
           method: post
@@ -227,6 +243,14 @@ functions:
           authorizer: Auth
   UpdateEmailTemplate:
     handler: apps/attendance/src/app/lambda/http/updateEmailTemplate.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - ses:GetTemplate
+          - ses:CreateTemplate
+          - ses:UpdateTemplate
+          - ses:SendTemplatedEmail
+        Resource: ['*']
     events:
       - http:
           method: put
