@@ -1,9 +1,11 @@
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryCache } from 'react-query';
 
 import { getQueryStringParams } from '@cglm/common-util';
 import { apiEndpoint } from '../../config';
 import { CreateAttendeeRequest } from '../types/CreateAttendeeRequest';
 import { AttendeeItem } from '../models/AttendeeItem';
+
+const QUERY_KEY = 'attendees';
 
 interface AttendeesData {
   items: AttendeeItem[];
@@ -29,7 +31,7 @@ interface CreateAttendeeGuestVariables {
 }
 
 export function useAttendees(idToken: string, eventId: string) {
-  return useQuery<AttendeesData, Error>(['list-attendees', eventId], () =>
+  return useQuery<AttendeesData, Error>([QUERY_KEY, eventId], () =>
     fetch(`${apiEndpoint}/events/${eventId}/attendees`, {
       headers: {
         'Content-Type': 'application/json',
@@ -47,22 +49,21 @@ export function useAttendee(
   eventId: string,
   attendeeId: string
 ) {
-  return useQuery<AttendeeData, Error>(
-    ['list-attendees', eventId, attendeeId],
-    () =>
-      fetch(`${apiEndpoint}/events/${eventId}/attendees/${attendeeId}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${idToken}`,
-        },
-      }).then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
+  return useQuery<AttendeeData, Error>([QUERY_KEY, eventId, attendeeId], () =>
+    fetch(`${apiEndpoint}/events/${eventId}/attendees/${attendeeId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }
 
 export function useCreateAttendee(idToken: string) {
+  const queryCache = useQueryCache();
   return useMutation(({ eventId, newAttendee }: CreateAttendeeVariables) =>
     fetch(`${apiEndpoint}/events/${eventId}/attendees`, {
       method: 'POST',
@@ -73,12 +74,14 @@ export function useCreateAttendee(idToken: string) {
       body: JSON.stringify(newAttendee),
     }).then((res) => {
       if (!res.ok) throw new Error(res.statusText);
+      queryCache.invalidateQueries([QUERY_KEY]);
       return res.json();
     })
   );
 }
 
 export function useCreateAttendeeGuest(idToken: string) {
+  const queryCache = useQueryCache();
   return useMutation(
     ({ eventId, newAttendee, params }: CreateAttendeeGuestVariables) =>
       fetch(
@@ -95,6 +98,7 @@ export function useCreateAttendeeGuest(idToken: string) {
         }
       ).then((res) => {
         if (!res.ok) throw new Error(res.statusText);
+        queryCache.invalidateQueries([QUERY_KEY]);
         return res.json();
       })
   );

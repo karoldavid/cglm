@@ -4,6 +4,8 @@ import { apiEndpoint } from '../../config';
 import { CreateEventRequest } from '../types/CreateEventRequest';
 import { EventItem } from '../models/EventItem';
 
+const QUERY_KEY = 'events';
+
 interface EventsData {
   items: EventItem[];
 }
@@ -21,7 +23,7 @@ interface DeleteEventVariables {
 }
 
 export function useEvents(idToken: string) {
-  return useQuery<EventsData, Error>('list-events', () =>
+  return useQuery<EventsData, Error>(QUERY_KEY, () =>
     fetch(`${apiEndpoint}/events`, {
       headers: {
         'Content-Type': 'application/json',
@@ -35,7 +37,7 @@ export function useEvents(idToken: string) {
 }
 
 export function useEvent(idToken: string, eventId: string) {
-  return useQuery<EventData, Error>(['list-events', eventId], () =>
+  return useQuery<EventData, Error>([QUERY_KEY, eventId], () =>
     fetch(`${apiEndpoint}/events/${eventId}`, {
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +62,7 @@ export function useCreateEvent(idToken: string) {
       body: JSON.stringify(newEvent),
     }).then((res) => {
       if (!res.ok) throw new Error(res.statusText);
-      queryCache.invalidateQueries(['list-events']);
+      queryCache.invalidateQueries([QUERY_KEY]);
       return res.json();
     })
   );
@@ -77,7 +79,7 @@ export function useDeleteEvent(idToken: string) {
       },
     }).then((res) => {
       if (!res.ok) throw new Error(res.statusText);
-      queryCache.invalidateQueries(['list-events']);
+      queryCache.invalidateQueries([QUERY_KEY]);
       return res.json();
     })
   );

@@ -16,7 +16,7 @@ export const QrCodesList: React.FunctionComponent<QrCodesListProps> = ({
     return qrCode.expiration > Math.round(new Date().getTime() / 1000) ? (
       <List.Item key={qrCode.qrCodeId}>
         <List.Content floated="right">
-          <NavLink to={`${match.url}/${qrCode.qrCodeId}`}>show</NavLink>
+          <NavLink to={`${match.url}/${qrCode.qrCodeId}`}>Show</NavLink>
         </List.Content>
         <List.Content>{qrCode.timestamp}</List.Content>
       </List.Item>

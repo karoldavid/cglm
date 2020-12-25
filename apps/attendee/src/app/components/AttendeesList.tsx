@@ -16,7 +16,7 @@ export const AttendeesList: React.FunctionComponent<AttendeesListProps> = ({
     return (
       <List.Item key={attendee.attendeeId}>
         <List.Content floated="right">
-          <NavLink to={`${match.url}/${attendee.attendeeId}`}>show</NavLink>
+          <NavLink to={`${match.url}/${attendee.attendeeId}`}>Show</NavLink>
         </List.Content>
         <List.Content>{attendee.name}</List.Content>
       </List.Item>

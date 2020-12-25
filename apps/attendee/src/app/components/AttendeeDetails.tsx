@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
-import { Header, Segment, Button } from 'semantic-ui-react';
+import { Header, Segment } from 'semantic-ui-react';
 
 import { useAttendee } from '../api/attendees';
 import Auth from '../auth/Auth';
@@ -19,24 +19,11 @@ export const AttendeeDetails: React.FunctionComponent<AttendeeDetailsProps> = ({
 
   const { data, isLoading } = useAttendee(auth.getIdToken(), id, attendeeId);
 
-  const navigateBack = () => {
-    history.push(`/events/${id}/attendees`);
-  };
-
   return (
     <>
       <Segment>
         <Header size="medium">Attendee Details</Header>
         <AttendeeDetailsCard data={data} loading={isLoading} />
-        <Button
-          basic
-          color="blue"
-          size="medium"
-          type="button"
-          onClick={navigateBack}
-        >
-          Back
-        </Button>
       </Segment>
     </>
   );
