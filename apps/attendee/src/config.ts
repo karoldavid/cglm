@@ -2,7 +2,8 @@ const apiId = process.env.NX_API_ID;
 const apiPort = process.env.NX_API_PORT;
 
 export const apiEndpoint =
-  process.env.NODE_ENV === 'development'
+  // process.env.NODE_ENV === 'development'
+  process.env.NX_IS_OFFLINE
     ? `http://localhost:${apiPort}/dev`
     : `https://${apiId}.execute-api.us-east-1.amazonaws.com/dev`;
 
