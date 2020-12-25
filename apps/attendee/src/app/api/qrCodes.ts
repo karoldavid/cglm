@@ -22,7 +22,10 @@ export function useQrCodes(idToken: string, eventId: string) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }
 
@@ -33,7 +36,10 @@ export function useQrCode(idToken: string, eventId: string, qrCodeId: string) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }
 
@@ -45,6 +51,9 @@ export function useCreateQrCode(idToken: string) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }

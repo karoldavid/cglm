@@ -18,7 +18,7 @@ export const Events: React.FunctionComponent<EventsProps> = ({ auth }) => {
   return (
     <Segment loading={isLoading}>
       <Header size="medium">Events Overview</Header>
-      <EventsTable events={data && data.items} />
+      <EventsTable events={data && data.items} auth={auth} />
     </Segment>
   );
 };

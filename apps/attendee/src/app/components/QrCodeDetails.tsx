@@ -78,7 +78,7 @@ export const QrCodeDetails: React.FunctionComponent<QrCodeDetailsProps> = ({
                 <SignupEmailForm
                   auth={auth}
                   qrcode={isLoading || isError ? '' : data.item.base64}
-                  url={isLoading || isError ? '' : data.item.url}
+                  url={isLoading || isError ? '' : data.item.shortUrl}
                 />
               </Card>
             )}

@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryCache } from 'react-query';
 
 import { apiEndpoint } from '../../config';
 import { CreateEventRequest } from '../types/CreateEventRequest';
@@ -16,29 +16,40 @@ interface CreateEventVariables {
   newEvent: CreateEventRequest;
 }
 
+interface DeleteEventVariables {
+  eventId: string;
+}
+
 export function useEvents(idToken: string) {
-  return useQuery<EventsData, Error>('events', () =>
+  return useQuery<EventsData, Error>('list-events', () =>
     fetch(`${apiEndpoint}/events`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }
 
 export function useEvent(idToken: string, eventId: string) {
-  return useQuery<EventData, Error>(['events', eventId], () =>
+  return useQuery<EventData, Error>(['list-events', eventId], () =>
     fetch(`${apiEndpoint}/events/${eventId}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }
 
 export function useCreateEvent(idToken: string) {
+  const queryCache = useQueryCache();
   return useMutation(({ newEvent }: CreateEventVariables) =>
     fetch(`${apiEndpoint}/events`, {
       method: 'POST',
@@ -47,6 +58,27 @@ export function useCreateEvent(idToken: string) {
         Authorization: `Bearer ${idToken}`,
       },
       body: JSON.stringify(newEvent),
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      queryCache.invalidateQueries(['list-events']);
+      return res.json();
+    })
+  );
+}
+
+export function useDeleteEvent(idToken: string) {
+  const queryCache = useQueryCache();
+  return useMutation(({ eventId }: DeleteEventVariables) =>
+    fetch(`${apiEndpoint}/events/${eventId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      queryCache.invalidateQueries(['list-events']);
+      return res.json();
+    })
   );
 }

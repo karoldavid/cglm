@@ -16,6 +16,9 @@ export function useSendSignupEmail(idToken: string) {
         Authorization: `Bearer ${idToken}`,
       },
       body: JSON.stringify(signupEmail),
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }

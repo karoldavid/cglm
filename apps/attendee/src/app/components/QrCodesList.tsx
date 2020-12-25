@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouteMatch, useParams, NavLink } from 'react-router-dom';
+import { useRouteMatch, NavLink } from 'react-router-dom';
 import { List, Segment } from 'semantic-ui-react';
 import { QrCodeItem } from '../models/QrCodeItem';
 

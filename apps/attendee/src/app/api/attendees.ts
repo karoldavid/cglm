@@ -35,7 +35,10 @@ export function useAttendees(idToken: string, eventId: string) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }
 
@@ -52,7 +55,10 @@ export function useAttendee(
           'Content-Type': 'application/json',
           Authorization: `Bearer ${idToken}`,
         },
-      }).then((res) => res.json())
+      }).then((res) => {
+        if (!res.ok) throw new Error(res.statusText);
+        return res.json();
+      })
   );
 }
 
@@ -65,7 +71,10 @@ export function useCreateAttendee(idToken: string) {
         Authorization: `Bearer ${idToken}`,
       },
       body: JSON.stringify(newAttendee),
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
   );
 }
 
