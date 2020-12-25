@@ -56,3 +56,14 @@ export async function eventExists(
 
   return eventAccess.eventExists(eventId, userId);
 }
+
+export async function deleteEvent(
+  event: APIGatewayProxyEvent
+): Promise<string> {
+  const { eventId } = event.pathParameters;
+  const userId = getUserId(event);
+
+  logger.info('Deleting event.');
+
+  return await eventAccess.deleteEvent(eventId, userId);
+}

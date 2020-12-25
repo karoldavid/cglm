@@ -73,4 +73,23 @@ export class EventAccess {
 
     return !!result.Item;
   }
+
+  async deleteEvent(eventId: string, userId: string): Promise<string> {
+    const params = {
+      TableName: this.eventsTable,
+      Key: {
+        userId: userId,
+        eventId: eventId,
+      },
+    };
+    try {
+      await this.docClient.delete(params).promise();
+
+      return eventId;
+    } catch (err) {
+      logger.info('Unable to delete item. Error JSON:', err);
+
+      throw new Error(err);
+    }
+  }
 }

@@ -128,6 +128,23 @@ functions:
             requestModels:
               'application/json': CreateEventRequest
 
+  DeleteEvent:
+    handler: apps/attendance/src/app/lambda/http/deleteEvent.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+    events:
+      - http:
+          method: delete
+          path: events/{eventId}
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Delete an event item
+            description: Delete an event item
+
   GetAttendees:
     handler: apps/attendance/src/app/lambda/http/getAttendees.handler
     iamRoleStatements:
