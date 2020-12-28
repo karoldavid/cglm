@@ -16,10 +16,6 @@ type AttendeeItem = {
   eventDate: string;
 };
 
-interface AttendeeState {
-  loading: boolean;
-}
-
 export const AttendeeForm: React.FunctionComponent<AttendeeFormProps> = ({
   auth,
 }) => {

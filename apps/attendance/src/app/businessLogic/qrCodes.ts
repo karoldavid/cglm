@@ -10,9 +10,10 @@ import { QrCodeAccess } from '../dataLayer/qrCodeAccess';
 
 const logger = createLogger('qrCodes');
 
-const PUBLIC_URL = process.env.IS_OFFLINE
-  ? `https://${process.env.LOCAL_TUNNEL_SUB_DOMAIN}.loca.lt`
-  : '';
+const ATTENDEE_URL =
+  process.env.NODE_ENV === 'development'
+    ? `https://${process.env.LOCAL_TUNNEL_SUB_DOMAIN}.loca.lt`
+    : process.env.ATTENDEE_URL;
 
 const qrCodeAccess = new QrCodeAccess();
 
@@ -49,7 +50,7 @@ export async function createQrCode(
   const eventId = event.pathParameters.eventId;
   const qrCodeId = uuid.v4();
 
-  const url = `${PUBLIC_URL}/guest/events/${eventId}/attendees?qrCodeId=${qrCodeId}`;
+  const url = `${ATTENDEE_URL}/guest/events/${eventId}/attendees?qrCodeId=${qrCodeId}`;
 
   const shortUrl = await TinyUrl.shorten(url);
 
@@ -65,6 +66,8 @@ export async function createQrCode(
     expiration: Math.round(new Date().getTime() / 1000) + 360,
   });
 }
+
+console.log(process.env.NX_TEST);
 
 export async function qrCodeIsValid(
   event: APIGatewayProxyEvent

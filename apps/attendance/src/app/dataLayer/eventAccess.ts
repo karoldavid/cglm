@@ -92,4 +92,30 @@ export class EventAccess {
       throw new Error(err);
     }
   }
+
+  async updateEventUrl(
+    userId: string,
+    eventId: string,
+    attachmentUrl: string
+  ): Promise<string> {
+    logger.info('Updating event url.');
+
+    await this.docClient
+      .update({
+        TableName: this.eventsTable,
+        Key: {
+          eventId,
+          userId,
+        },
+        ExpressionAttributeNames: { '#A': 'attachmentUrl' },
+        UpdateExpression: 'set #A = :attachmentUrl',
+        ExpressionAttributeValues: {
+          ':attachmentUrl': attachmentUrl,
+        },
+        ReturnValues: 'UPDATED_NEW',
+      })
+      .promise();
+
+    return attachmentUrl;
+  }
 }

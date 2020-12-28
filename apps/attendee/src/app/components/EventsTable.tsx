@@ -19,11 +19,11 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
 
   const [mutate] = useDeleteEvent(auth.getIdToken());
 
-  const navigateToEventItem = (event: EventItem) => {
-    history.push(`${match.path}/${event.eventId}/attendees`);
+  const navigateToEditEvent = ({ eventId }: EventItem) => {
+    history.push(`${match.path}/${eventId}/edit`);
   };
 
-  const deleteEvent = (eventId: string) => {
+  const deleteEvent = ({ eventId }: EventItem) => {
     mutate({ eventId });
   };
 
@@ -54,9 +54,17 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
               basic
               size="medium"
               style={{ borderRadius: 0 }}
-              onClick={() => deleteEvent(event.eventId)}
+              onClick={() => deleteEvent(event)}
             >
               Delete
+            </Button>
+            <Button
+              basic
+              size="medium"
+              style={{ borderRadius: 0 }}
+              onClick={() => navigateToEditEvent(event)}
+            >
+              Edit
             </Button>
           </Button.Group>
           <NavLink to={`${match.path}/${event.eventId}/attendees`}>

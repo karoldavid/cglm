@@ -9,6 +9,7 @@ import { Now } from '../components/Now';
 import { Events } from '../components/Events';
 import { EventDetails } from '../components/EventDetails';
 import { EventForm } from '../components/EventForm';
+import { EditEvent } from '../components/EditEvent';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { ProtectedGuestRoute } from '../components/ProtectedGuestRoute';
 
@@ -26,6 +27,12 @@ export const Main: React.FunctionComponent<MainProps> = ({ auth }) => {
         path="/events/new"
         exact
         component={EventForm}
+      />
+      <ProtectedRoute
+        auth={auth}
+        path="/events/:id/edit"
+        exact
+        component={EditEvent}
       />
       <ProtectedRoute
         auth={auth}

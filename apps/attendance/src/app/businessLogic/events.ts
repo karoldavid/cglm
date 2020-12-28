@@ -67,3 +67,15 @@ export async function deleteEvent(
 
   return await eventAccess.deleteEvent(eventId, userId);
 }
+
+export async function updateEventUrl(
+  eventId: string,
+  attachmentUrl: string,
+  event: APIGatewayProxyEvent
+): Promise<string> {
+  const userId = getUserId(event);
+
+  logger.info('Updating Event.');
+
+  return await eventAccess.updateEventUrl(userId, eventId, attachmentUrl);
+}

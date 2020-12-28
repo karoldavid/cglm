@@ -22,6 +22,15 @@ interface DeleteEventVariables {
   eventId: string;
 }
 
+interface GetUploadEventVariables {
+  eventId: string;
+}
+
+interface EditEventVariables {
+  uploadUrl: string;
+  file: Buffer;
+}
+
 export function useEvents(idToken: string) {
   return useQuery<EventsData, Error>(QUERY_KEY, () =>
     fetch(`${apiEndpoint}/events`, {
@@ -77,6 +86,35 @@ export function useDeleteEvent(idToken: string) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      queryCache.invalidateQueries([QUERY_KEY]);
+      return res.json();
+    })
+  );
+}
+
+export function useGetUploadUrl(idToken: string) {
+  return useMutation(({ eventId }: GetUploadEventVariables) =>
+    fetch(`${apiEndpoint}/events/${eventId}/attachment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+    }).then((res) => {
+      if (!res.ok) throw new Error(res.statusText);
+      return res.json();
+    })
+  );
+}
+
+export function useUploadFile() {
+  const queryCache = useQueryCache();
+  return useMutation(({ uploadUrl, file }: EditEventVariables) =>
+    fetch(uploadUrl, {
+      method: 'PUT',
+      body: file,
     }).then((res) => {
       if (!res.ok) throw new Error(res.statusText);
       queryCache.invalidateQueries([QUERY_KEY]);
