@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, Header, Segment } from 'semantic-ui-react';
+import { Button, Form, Header, Message, Segment } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { useHistory, NavLink } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
     }
   };
 
-  console.log(errors)
+  console.log(errors);
 
   return (
     <Segment loading={isLoading}>
@@ -53,7 +53,6 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
               maxLength: 20,
             })}
           />
-          { errors.name && ''}
         </Form.Field>
         <Form.Field>
           <input
@@ -72,6 +71,13 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
           </Button>
         </Button.Group>
       </Form>
+      {errors.name && (
+        <Message
+          error
+          content="Event name is required, can contain only letters and numbers and length must be > 5 < 20."
+        />
+      )}
+      {errors.eventDate && <Message error content="Event date is required." />}
     </Segment>
   );
 };
