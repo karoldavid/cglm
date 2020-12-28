@@ -59,6 +59,7 @@ export const EditEventForm: React.FunctionComponent<EditEventFormProps> = ({
       alert('Could not upload a file: ' + e.message);
     } finally {
       setUploadFileState(UploadState.NoUpload);
+      history.push('/events');
     }
   };
 
