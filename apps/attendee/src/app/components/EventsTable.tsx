@@ -20,7 +20,7 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
   const history = useHistory();
   const match = useRouteMatch();
 
-  const [mutate] = useDeleteEvent(auth.getIdToken());
+  const [mutate, { isLoading }] = useDeleteEvent(auth.getIdToken());
 
   const navigateToEditEvent = ({ eventId }: EventItem) => {
     history.push(`${match.path}/${eventId}/edit`);
@@ -57,6 +57,7 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
         <Table.Cell textAlign="right">
           <Button.Group>
             <Button
+              loading={isLoading}
               basic
               size="medium"
               style={{ borderRadius: 0 }}

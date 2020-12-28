@@ -34,8 +34,6 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
     }
   };
 
-  console.log(errors);
-
   return (
     <Segment loading={isLoading}>
       <Header size="medium">Create a new event</Header>
