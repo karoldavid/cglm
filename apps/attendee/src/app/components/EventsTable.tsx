@@ -1,9 +1,12 @@
 import React from 'react';
 import { useHistory, useRouteMatch, NavLink } from 'react-router-dom';
-import { Button, Table } from 'semantic-ui-react';
+import { Button, Image, Table } from 'semantic-ui-react';
 import { EventItem } from '../models/EventItem';
 import { useDeleteEvent } from '../api/events';
 import Auth from '../auth/Auth';
+
+const placeholderImage =
+  'https://react.semantic-ui.com/images/wireframe/image.png';
 
 interface EventsTableProps {
   auth: Auth;
@@ -32,7 +35,7 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
       <Table.Header>
         <Table.HeaderCell>Name</Table.HeaderCell>
         <Table.HeaderCell>Date</Table.HeaderCell>
-        <Table.HeaderCell>Organizer</Table.HeaderCell>
+        <Table.HeaderCell>Image</Table.HeaderCell>
         <Table.HeaderCell textAlign="right">
           <Button as={NavLink} basic color="blue" to="/events/new">
             New
@@ -47,7 +50,10 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
       <>
         <Table.Cell>{event.name}</Table.Cell>
         <Table.Cell>{event.eventDate}</Table.Cell>
-        <Table.Cell>-</Table.Cell>
+        <Table.Cell>
+          {' '}
+          <Image src={event.attachmentUrl || placeholderImage} size="mini" />
+        </Table.Cell>
         <Table.Cell textAlign="right">
           <Button.Group>
             <Button

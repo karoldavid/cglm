@@ -4,4 +4,5 @@ export interface EventItem {
   createdAt: string;
   name: string;
   eventDate: string;
+  attachmentUrl?: string;
 }
