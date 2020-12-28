@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory, useRouteMatch, NavLink } from 'react-router-dom';
-import { Button, Image, Table } from 'semantic-ui-react';
+import { Button, Icon, Image, Table } from 'semantic-ui-react';
 import { EventItem } from '../models/EventItem';
 import { useDeleteEvent } from '../api/events';
 import Auth from '../auth/Auth';
@@ -62,7 +62,7 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
               style={{ borderRadius: 0 }}
               onClick={() => deleteEvent(event)}
             >
-              Delete
+              <Icon name="delete" />
             </Button>
             <Button
               basic
@@ -70,7 +70,7 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
               style={{ borderRadius: 0 }}
               onClick={() => navigateToEditEvent(event)}
             >
-              Edit
+              <Icon name="pencil alternate" />
             </Button>
           </Button.Group>
           <NavLink to={`${match.path}/${event.eventId}/attendees`}>
