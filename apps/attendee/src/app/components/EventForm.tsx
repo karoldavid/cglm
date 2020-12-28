@@ -23,7 +23,7 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
 
   const [mutate, { isLoading }] = useCreateEvent(auth.getIdToken());
 
-  const { register, handleSubmit } = useForm<EventItem>();
+  const { register, handleSubmit, errors } = useForm<EventItem>();
 
   const onSubmit = async (data: CreateEventRequest) => {
     try {
@@ -33,6 +33,8 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
       alert(e.message);
     }
   };
+
+  console.log(errors)
 
   return (
     <Segment loading={isLoading}>
@@ -44,8 +46,14 @@ export const EventForm: React.FunctionComponent<EventFormProps> = ({
             type="text"
             id="name"
             name="name"
-            ref={register({ required: true })}
+            ref={register({
+              required: true,
+              pattern: /^[a-zA-Z0-9]+$/i,
+              minLength: 5,
+              maxLength: 20,
+            })}
           />
+          { errors.name && ''}
         </Form.Field>
         <Form.Field>
           <input
