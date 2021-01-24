@@ -24,6 +24,7 @@ Work in progress...
 - [AWS DynamoDB](https://aws.amazon.com/dynamodb)
 - [AWS Simple Cloud Storage](https://aws.amazon.com/s3)
 - [AWS Simple Email Service](https://aws.amazon.com/ses)
+- [AWS Simple Notification Service](https://aws.amazon.com/sns)
 - [AWS X-Ray Distributed Tracing](https://aws.amazon.com/xray)
 - [Serverless Framework](https://www.serverless.com/)
 - [Auth0](https://auth0.com/)
@@ -32,6 +33,7 @@ Work in progress...
 - [React](https://reactjs.org/)
 - [React Hook Form](https://react-hook-form.com)
 - [React Query](https://react-query.tanstack.com)
+- [Websockets](https://www.npmjs.com/package/isomorphic-ws)
 - [Semantic UI](https://react.semantic-ui.com)
 - [Storybook](https://storybook.js.org)
 - ...
