@@ -16,7 +16,8 @@ export class ImageAccess {
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
     private readonly imagesTable = process.env.IMAGES_TABLE,
-    readonly bucketName = process.env.IMAGES_S3_BUCKET
+    readonly bucketName = process.env.IMAGES_S3_BUCKET,
+    readonly thumbnailBucketName = process.env.THUMBNAILS_S3_BUCKET
   ) {}
 
   async putImage(newItem: ImageItem): Promise<ImageItem> {

@@ -54,7 +54,7 @@ export const EditEventForm: React.FunctionComponent<EditEventFormProps> = ({
 
       await uploadFile({ uploadUrl, file: files[0] });
 
-      alert('File was uploaded!');
+      // alert('File was uploaded!');
     } catch (e) {
       alert('Could not upload a file: ' + e.message);
     } finally {

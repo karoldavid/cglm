@@ -5,4 +5,5 @@ export interface EventItem {
   name: string;
   eventDate: string;
   attachmentUrl?: string;
+  thumbnailUrl?: string;
 }

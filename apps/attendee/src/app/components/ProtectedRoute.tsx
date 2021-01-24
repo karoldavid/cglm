@@ -6,8 +6,9 @@ import { Redirect } from './Redirect';
 
 interface ProtectedRouteProps extends RouteProps {
   auth: Auth;
-  exact?: boolean;
   path: string;
+  exact?: boolean;
+  image?: object;
 }
 
 interface ProtectedRouteComponentProps extends RouteComponentProps {
@@ -30,7 +31,7 @@ export const ProtectedRoute: React.FunctionComponent<ProtectedRouteProps> = ({
       {...otherProps}
       render={(props: ProtectedRouteComponentProps) =>
         auth.isAuthenticated() && (auth.isAdmin() || auth.isUser()) ? (
-          <Component auth={auth} {...props} />
+          <Component auth={auth} {...props} {...otherProps} />
         ) : (
           <Redirect />
         )

@@ -118,4 +118,56 @@ export class EventAccess {
 
     return attachmentUrl;
   }
+
+  async updateEventThumbnailUrl(
+    userId: string,
+    eventId: string,
+    thumbnailUrl: string
+  ): Promise<string> {
+    logger.info('Updating event thumbnail url.');
+
+    await this.docClient
+      .update({
+        TableName: this.eventsTable,
+        Key: {
+          eventId,
+          userId,
+        },
+        ExpressionAttributeNames: { '#T': 'thumbnailUrl' },
+        UpdateExpression: 'set #T = :thumbnailUrl',
+        ExpressionAttributeValues: {
+          ':thumbnailUrl': thumbnailUrl,
+        },
+        ReturnValues: 'UPDATED_NEW',
+      })
+      .promise();
+
+    return thumbnailUrl;
+  }
+
+  async updateEventThumbnailUrl2(
+    userId: string,
+    eventId: string,
+    thumbnailUrl: string
+  ): Promise<string> {
+    logger.info('Updating event thumbnail url.');
+
+    await this.docClient
+      .update({
+        TableName: this.eventsTable,
+        Key: {
+          eventId,
+          userId,
+        },
+        ExpressionAttributeNames: { '#T': 'thumbnailUrl' },
+        UpdateExpression: 'set #T = :thumbnailUrl',
+        ExpressionAttributeValues: {
+          ':thumbnailUrl': thumbnailUrl,
+        },
+        ReturnValues: 'UPDATED_NEW',
+      })
+      .promise();
+
+    return thumbnailUrl;
+  }
 }

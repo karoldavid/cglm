@@ -30,12 +30,16 @@ provider:
     IMAGES_TABLE: Images-${self:provider.stage}
     IMAGE_ID_INDEX: ImageIdIndex
     IMAGES_S3_BUCKET: serverless-attendance-app-images-${self:provider.stage}
+    THUMBNAILS_S3_BUCKET: serverless-attendance-app-thumbnails-${self:provider.stage}
+    CONNECTIONS_TABLE: Connections-${self:provider.stage}
 
   tracing:
     lambda: true
     apiGateway: true
 
 custom:
+  imagesTopicName: imagesTopic-${self:provider.stage}
+  thumbnailsTopicName: thumbnailsTopic-${self:provider.stage}
   dotenv:
     path: apps/attendance/.env.local
     required:
@@ -182,6 +186,10 @@ functions:
           - dynamodb:Query
           - dynamodb:GetItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ATTENDEES_TABLE}/index/${self:provider.environment.ATTENDEE_ID_INDEX}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.IMAGES_TABLE}
     events:
       - http:
           method: get
@@ -322,7 +330,6 @@ functions:
       - Effect: Allow
         Action:
           - s3:PutObject
-          - s3:GetObject
         Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
       - Effect: Allow
         Action:
@@ -339,8 +346,106 @@ functions:
             summary: Return a presigned URL
             description: Return a presigned URL to upload a file for an EVENT item with the provided eventId
 
+  ConnectHandler:
+    handler: apps/attendance/src/app/websocket/connect.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}
+    events:
+      - websocket:
+          route: $connect
+
+  DisconnectHandler:
+    handler: apps/attendance/src/app/websocket/disconnect.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}
+    events:
+      - websocket:
+          route: $disconnect
+
   SendUploadNotifications:
+    environment:
+      STAGE: ${self:provider.stage}
+      API_ID:
+        Ref: WebsocketsApi
     handler: apps/attendance/src/app/lambda/s3/sendNotifications.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}
+      - Effect: Allow
+        Action:
+          - execute-api:Invoke
+          - execute-api:ManageConnections
+        Resource: arn:aws:execute-api:${opt:region, self:provider.region}:*:*
+    events:
+      - sns:
+          arn:
+            Fn::Join:
+              - ':'
+              - - arn:aws:sns
+                - Ref: AWS::Region
+                - Ref: AWS::AccountId
+                - ${self:custom.imagesTopicName}
+          topicName: ${self:custom.imagesTopicName}
+      - sns:
+          arn:
+            Fn::Join:
+              - ':'
+              - - arn:aws:sns
+                - Ref: AWS::Region
+                - Ref: AWS::AccountId
+                - ${self:custom.thumbnailsTopicName}
+          topicName: ${self:custom.thumbnailsTopicName}
+
+  ResizeImage:
+    handler: apps/attendance/src/app/lambda/s3/resizeImage.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+        Resource: 'arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*'
+    events:
+      - sns:
+          arn:
+            Fn::Join:
+              - ':'
+              - - arn:aws:sns
+                - Ref: AWS::Region
+                - Ref: AWS::AccountId
+                - ${self:custom.imagesTopicName}
+          topicName: ${self:custom.imagesTopicName}
+
+  UpdateEventThumbnailUrl:
+    handler: apps/attendance/src/app/lambda/s3/updateEventThumbnailUrl.handler
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.EVENTS_TABLE}
+    # events:
+    #   - sns:
+    #       arn:
+    #         Fn::Join:
+    #           - ':'
+    #           - - arn:aws:sns
+    #             - Ref: AWS::Region
+    #             - Ref: AWS::AccountId
+    #             - ${self:custom.thumbnailsTopicName}
+    #       topicName: ${self:custom.thumbnailsTopicName}
 
 resources:
   Resources:
@@ -443,14 +548,16 @@ resources:
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
+
     AttachmentsBucket:
       Type: AWS::S3::Bucket
+      DependsOn: SNSImagesTopicPolicy
       Properties:
         BucketName: ${self:provider.environment.IMAGES_S3_BUCKET}
         NotificationConfiguration:
-          LambdaConfigurations:
-            - Event: s3:ObjectCreated:*
-              Function: !GetAtt SendUploadNotificationsLambdaFunction.Arn
+          TopicConfigurations:
+            - Event: s3:ObjectCreated:Put
+              Topic: !Ref ImagesTopic
         CorsConfiguration:
           CorsRules:
             - AllowedOrigins:
@@ -465,30 +572,82 @@ resources:
                 - HEAD
               MaxAge: 3000
 
-    SendUploadNotificationsPermission:
-      Type: AWS::Lambda::Permission
+    ThumbnailsBucket:
+      Type: AWS::S3::Bucket
+      DependsOn: SNSThumbnailsTopicPolicy
       Properties:
-        FunctionName: !Ref SendUploadNotificationsLambdaFunction
-        Principal: s3.amazonaws.com
-        Action: lambda:InvokeFunction
-        SourceAccount: !Ref AWS::AccountId
-        SourceArn: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}
+        BucketName: ${self:provider.environment.THUMBNAILS_S3_BUCKET}
+        NotificationConfiguration:
+          TopicConfigurations:
+            - Event: s3:ObjectCreated:Put
+              Topic: !Ref ThumbnailsTopic
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
 
-    BucketPolicy:
+    ImagesTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Image bucket topic
+        TopicName: ${self:custom.imagesTopicName}
+
+    ThumbnailsTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: Thumbnail bucket topic
+        TopicName: ${self:custom.thumbnailsTopicName}
+
+    AttachmentsBucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
         PolicyDocument:
           Id: MyPolicy
           Version: '2012-10-17'
           Statement:
-            - Sid: PublicReadWriteBucketPolicy
+            - Sid: PublicReadForGetBucketObjects
               Effect: Allow
               Principal: '*'
               Action:
                 - s3:GetObject
-                - s3:PutObject
               Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
         Bucket: !Ref AttachmentsBucket
+    
+    ThumbnailsBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        PolicyDocument:
+          Id: MyPolicy
+          Version: '2012-10-17'
+          Statement:
+            - Sid: PublicReadForGetBucketObjects
+              Effect: Allow
+              Principal: '*'
+              Action:
+                - s3:GetObject
+              Resource: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}/*
+        Bucket: !Ref ThumbnailsBucket
+
+    WebSocketConnectionsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.CONNECTIONS_TABLE}
 
     RequestBodyValidator:
       Type: AWS::ApiGateway::RequestValidator
@@ -498,3 +657,39 @@ resources:
           Ref: ApiGatewayRestApi
         ValidateRequestBody: true
         ValidateRequestParameters: false
+
+    SNSImagesTopicPolicy:
+      Type: AWS::SNS::TopicPolicy
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                AWS: '*'
+              Action: sns:Publish
+              Resource: !Ref ImagesTopic
+              Condition:
+                ArnLike:
+                  AWS:SourceArn: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}
+        Topics:
+          - !Ref ImagesTopic
+
+    SNSThumbnailsTopicPolicy:
+      Type: AWS::SNS::TopicPolicy
+      Properties:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                AWS: '*'
+              Action: sns:Publish
+              Resource: !Ref ThumbnailsTopic
+              Condition:
+                ArnLike:
+                  AWS:SourceArn: arn:aws:s3:::${self:provider.environment.THUMBNAILS_S3_BUCKET}
+        Topics:
+          - !Ref ThumbnailsTopic
+
+

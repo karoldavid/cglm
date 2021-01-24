@@ -8,9 +8,16 @@ import { EventsTable } from './EventsTable';
 
 interface EventsProps {
   auth: Auth;
+  image?: {
+    imageId: string;
+    bucketName: string;
+  };
 }
 
-export const Events: React.FunctionComponent<EventsProps> = ({ auth }) => {
+export const EventsOverview: React.FunctionComponent<EventsProps> = ({
+  auth,
+  image,
+}) => {
   const history = useHistory();
 
   const { data, isLoading } = useEvents(auth.getIdToken());
@@ -18,7 +25,7 @@ export const Events: React.FunctionComponent<EventsProps> = ({ auth }) => {
   return (
     <Segment loading={isLoading}>
       <Header size="medium">Events Overview</Header>
-      <EventsTable events={data && data.items} auth={auth} />
+      <EventsTable events={data && data.items} auth={auth} image={image} />
     </Segment>
   );
 };

@@ -79,3 +79,33 @@ export async function updateEventUrl(
 
   return await eventAccess.updateEventUrl(userId, eventId, attachmentUrl);
 }
+
+export async function updateEventThumbnailUrl(
+  eventId: string,
+  thumbnailUrl: string,
+  event: APIGatewayProxyEvent
+): Promise<string> {
+  const userId = getUserId(event);
+
+  logger.info('Updating Event thumbnail url.');
+
+  return await eventAccess.updateEventThumbnailUrl(
+    userId,
+    eventId,
+    thumbnailUrl
+  );
+}
+
+export async function updateEventThumbnailUrl2(
+  userId: string,
+  eventId: string,
+  thumbnailUrl: string
+): Promise<string> {
+  logger.info('Updating Event thumbnail url.');
+
+  return await eventAccess.updateEventThumbnailUrl2(
+    userId,
+    eventId,
+    thumbnailUrl
+  );
+}

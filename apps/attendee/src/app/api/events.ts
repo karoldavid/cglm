@@ -118,7 +118,7 @@ export function useUploadFile() {
     }).then((res) => {
       if (!res.ok) throw new Error(res.statusText);
       queryCache.invalidateQueries([QUERY_KEY]);
-      return res.json();
+      return res;
     })
   );
 }

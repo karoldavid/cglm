@@ -5,17 +5,24 @@ import { EventItem } from '../models/EventItem';
 import { useDeleteEvent } from '../api/events';
 import Auth from '../auth/Auth';
 
+const THUMBNAILS_BUCKET_NAME = process.env.NX_THUMBNAILS_BUCKET_NAME;
+
 const placeholderImage =
   'https://react.semantic-ui.com/images/wireframe/image.png';
 
 interface EventsTableProps {
   auth: Auth;
   events: EventItem[];
+  image: {
+    imageId: string;
+    bucketName: string;
+  };
 }
 
 export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
   auth,
   events = [],
+  image,
 }) => {
   const history = useHistory();
   const match = useRouteMatch();
@@ -52,7 +59,11 @@ export const EventsTable: React.FunctionComponent<EventsTableProps> = ({
         <Table.Cell>{event.eventDate}</Table.Cell>
         <Table.Cell>
           {' '}
-          <Image src={event.attachmentUrl || placeholderImage} size="mini" />
+          <Image
+            src={event.thumbnailUrl || placeholderImage}
+            size="mini"
+            onError={(e) => (e.target.style.display = 'none')}
+          />
         </Table.Cell>
         <Table.Cell textAlign="right">
           <Button.Group>

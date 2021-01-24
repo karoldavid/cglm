@@ -7,4 +7,5 @@ export interface ImageItem {
   name: string;
   eventDate: string;
   attachmentUrl?: string;
+  thumbnailBucketUrl?: string;
 }

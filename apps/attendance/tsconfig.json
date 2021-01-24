@@ -2,14 +2,16 @@
   // "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["es2017"],
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
+    "module": "commonjs",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "sourceMap": true,
     "target": "es2017",
-    "outDir": "lib"
+    "outDir": "lib",
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
   // "files": [],
   // "include": [],
   // "references": [

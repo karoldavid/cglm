@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Grid, Header, Segment, Container } from 'semantic-ui-react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,10 +10,9 @@ export interface AppProps {
   auth: Auth;
 }
 
-export interface AppState {}
-
 export const App: React.FunctionComponent<AppProps> = ({ auth }) => {
   const { t } = useTranslation();
+
   return (
     <Suspense fallback="loading">
       <Container style={{ padding: '2em 0em' }}>

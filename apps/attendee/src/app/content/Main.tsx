@@ -6,7 +6,7 @@ import Auth from '../auth/Auth';
 import { NotFound } from '../components/NotFound';
 import { GuestSignupForm } from '../components/GuestSignupForm';
 import { Now } from '../components/Now';
-import { Events } from '../components/Events';
+import { Events } from './Events';
 import { EventDetails } from '../components/EventDetails';
 import { EventForm } from '../components/EventForm';
 import { EditEvent } from '../components/EditEvent';
